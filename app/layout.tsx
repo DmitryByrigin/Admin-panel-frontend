@@ -7,6 +7,7 @@ import { Navbar } from '@/components/navbar/navbar';
 import { Link } from '@nextui-org/link';
 import clsx from 'clsx';
 import { Counter } from '@/components/counter';
+import SingInButton from '@/components/navbar/SingInButton';
 
 export const metadata: Metadata = {
   title: {
