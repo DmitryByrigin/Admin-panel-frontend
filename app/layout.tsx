@@ -6,8 +6,6 @@ import { Providers } from './providers';
 import { Navbar } from '@/components/navbar/navbar';
 import { Link } from '@nextui-org/link';
 import clsx from 'clsx';
-import { Counter } from '@/components/counter';
-import SingInButton from '@/components/navbar/SingInButton';
 
 export const metadata: Metadata = {
   title: {
@@ -35,10 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="relative flex flex-col h-screen">
             <Navbar />
 
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-              <Counter />
-            </main>
+            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">{children}</main>
             <footer className="w-full flex items-center justify-center py-3">
               <Link
                 isExternal

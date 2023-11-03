@@ -1,9 +1,9 @@
 'use client';
-// import { Button } from "@/components/Button";
-// import InputBox from "@/components/InputBox";
+
 import { Backend_URL } from '@/lib/Contants';
 import InputBox from '@/ui/inputbox';
 import { Button } from '@nextui-org/button';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import React, { useRef } from 'react';
 
@@ -27,13 +27,19 @@ const SignupPage = () => {
           'Content-Type': 'application/json',
         },
       });
+
       if (!res.ok) {
-        alert(res.statusText);
+        if (res.status === 409) {
+          alert('Пользователь уже существует');
+        } else {
+          alert(res.statusText);
+        }
         return;
       }
+
       const response = await res.json();
       alert('User Registered!');
-      console.log({ response });
+      // console.log({ response });
     } catch (error) {
       console.error('Ошибка при выполнении fetch:', error);
     }
@@ -74,6 +80,9 @@ const SignupPage = () => {
             Cancel
           </Link>
         </div>
+        <button onClick={() => signIn('google')} className="text-green-600 ml-auto">
+          Sign In with Google
+        </button>
       </div>
     </div>
   );

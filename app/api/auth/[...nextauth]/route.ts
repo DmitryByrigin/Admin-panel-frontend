@@ -12,7 +12,6 @@ async function refreshToken(token: JWT): Promise<JWT> {
       authorization: `Refresh ${token.backendTokens.refreshToken}`,
     },
   });
-  console.log('refreshed');
 
   const response = await res.json();
 
@@ -23,7 +22,6 @@ async function refreshToken(token: JWT): Promise<JWT> {
 }
 
 export const authOptions: NextAuthOptions = {
-  // const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -33,32 +31,39 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: {
+        email: {
           label: 'Username',
           type: 'text',
           placeholder: 'jsmith',
         },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials, req) {
-        if (!credentials?.username || !credentials?.password) return null;
-        const { username, password } = credentials;
-        const res = await fetch(Backend_URL + '/auth/login', {
-          method: 'POST',
-          body: JSON.stringify({
-            username,
-            password,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
+        const { email, password } = credentials;
+
+        let res;
+
+        if (credentials.password == '') {
+          res = await fetch(Backend_URL + '/auth/google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: email, password }),
+          });
+        } else {
+          res = await fetch(Backend_URL + '/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ username: email, password }),
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+
         if (res.status == 401) {
           console.log(res.statusText);
-
           return null;
         }
         const user = await res.json();
+
         return user;
       },
     }),
@@ -66,7 +71,19 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async jwt({ token, user }) {
-      if (user) return { ...token, ...user };
+      if (user) {
+        if (user.image) {
+          const res = await fetch(Backend_URL + '/auth/google', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user),
+          });
+          const user1 = await res.json();
+          return { ...token, ...user1 };
+        } else {
+          return { ...token, ...user };
+        }
+      }
 
       if (token.backendTokens && 'expiresIn' in token.backendTokens) {
         if (new Date().getTime() < token.backendTokens.expiresIn) return token;

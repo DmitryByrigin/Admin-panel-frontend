@@ -12,8 +12,6 @@ type Props = {
 
 const ProfilePage = async (props: Props) => {
   const session = await getServerSession(authOptions);
-  // const { data: session } = useSession();
-  // const session = await getSession({ req: props.req });
   // console.log(session);
 
   const response = await fetch(Backend_URL + `/user/${props.params.id}`, {
@@ -27,8 +25,6 @@ const ProfilePage = async (props: Props) => {
   });
 
   const user = await response.json();
-  // console.log(user.name);
-  // console.log(response);
 
   return (
     <div className="m-2 border rounded shadow overflow-hidden">
@@ -38,9 +34,11 @@ const ProfilePage = async (props: Props) => {
 
       <div className="grid grid-cols-2  p-2 gap-2">
         <p className="p-2 text-slate-400">Name:</p>
-        <p className="p-2 text-black">{user.name}</p>
+        <p className="p-2 text-white">{user.name}</p>
         <p className="p-2 text-slate-400">Email:</p>
-        <p className="p-2 text-black">{user.email}</p>
+        <p className="p-2 text-white">{user.email}</p>
+        <p className="p-2 text-slate-400">Role:</p>
+        <p className="p-2 text-white">{user.role}</p>
       </div>
     </div>
   );

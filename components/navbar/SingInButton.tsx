@@ -18,7 +18,7 @@ const SingInButton = () => {
   return (
     <div className="flex gap-4 ml-auto item-center">
       <Link href={'/api/auth/signin'} className="flex gap-4 ml-auto text-green-600">
-        <button onClick={() => signIn()} className="text-green-600 ml-auto">
+        <button onClick={() => signIn('google')} className="text-green-600 ml-auto">
           Sign In
         </button>
       </Link>
