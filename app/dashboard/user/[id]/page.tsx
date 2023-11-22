@@ -1,7 +1,6 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { auth } from '@/auth';
 import { Backend_URL } from '@/lib/Contants';
 import { IncomingMessage } from 'http';
-import { getServerSession } from 'next-auth';
 
 type Props = {
   req: (Partial<IncomingMessage> & { body?: any }) | undefined;
@@ -11,8 +10,7 @@ type Props = {
 };
 
 const ProfilePage = async (props: Props) => {
-  const session = await getServerSession(authOptions);
-  // console.log(session);
+  const session = await auth();
 
   const response = await fetch(Backend_URL + `/user/${props.params.id}`, {
     method: 'GET',
@@ -25,6 +23,12 @@ const ProfilePage = async (props: Props) => {
   });
 
   const user = await response.json();
+  console.log(user);
+
+  if (session?.user.role !== 'ADMIN') {
+    // throw new Error('You need be an admin');
+    console.log('You need be an admin');
+  }
 
   return (
     <div className="m-2 border rounded shadow overflow-hidden">

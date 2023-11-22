@@ -1,11 +1,10 @@
 import { title } from '@/components/primitives';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import {auth} from "@/auth";
 
 export default async function BlogPage() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (session?.user.role !== 'ADMIN') {
-    // throw new Error('You need be an admin');
+    throw new Error('You need be an admin');
     // console.log('You need be an admin');
   }
   return (

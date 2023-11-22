@@ -1,13 +1,12 @@
-import { getServerSession } from 'next-auth';
 import Link from 'next/link';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { auth } from '@/auth';
 
 type Props = {
   children: React.ReactNode;
 };
 
 const DashBoardLayout = async (props: Props) => {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   return (
     <div className=" grid grid-cols-12">
       <div className="grid-cols-4 border-r shadow h-screen p-2">

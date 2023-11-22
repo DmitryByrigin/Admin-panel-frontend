@@ -10,8 +10,6 @@ const getVariant = (variant?: VariantType) => {
       return 'bg-amber-500 hover:bg-amber-700 text-white shadow shadow-yellow-600/25 hover:shadow-yellow-600/75 ';
     case 'outline-danger':
       return 'bg-white text-red-500 border border-red-500 hover:text-white hover:bg-red-700  ';
-    case 'outline-danger':
-      return 'bg-white text-red-500 border border-red-500 hover:text-white hover:bg-red-700  ';
     case 'outline-success':
       return 'bg-white text-green-500 border border-green-500 hover:text-white hover:bg-green-700  ';
     case 'outline-warning':
