@@ -23,10 +23,10 @@ function ChangeImage() {
   // console.log(theme)
   if (isClient) {
     let imageDark, imageLight;
-    if (pathname === '/authorization/register') {
+    if (pathname === '/authorization/register' || '/') {
       imageDark = registerDark;
       imageLight = registerLight;
-    } else if (pathname === '/authorization/login') {
+    } else if (pathname === '/authorization/login' || '/') {
       imageDark = loginDark;
       imageLight = loginLight;
     }

@@ -19,7 +19,7 @@ import React, { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { schema, schemaLogin } from '@/lib/schema';
-import { SubmitButton, SubmitButtonLogin } from '@/components/shared/SubmitButtonLogin';
+import { SubmitButtonLogin } from '@/components/shared/SubmitButtonLogin';
 
 export default function LoginForm() {
   const {

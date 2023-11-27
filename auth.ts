@@ -11,6 +11,7 @@ declare module '@auth/core' {
     user: {
       id: string;
       name: string;
+      surname: string;
       email: string;
       image: string;
       sub: string;
@@ -22,6 +23,7 @@ declare module '@auth/core' {
     user: {
       id: string;
       name: string;
+      surname: string;
       email: string;
       image: string;
       sub: string;
@@ -38,6 +40,7 @@ declare module '@auth/core' {
 interface User {
   id: number;
   name: string;
+  surname: string;
   email: string;
   image: string;
   role: string;
@@ -144,7 +147,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         }
 
         if (res.status == 401) {
-          // console.log(res.statusText);
+          console.log(res.statusText);
           return null;
         }
         return await res.json();
@@ -167,6 +170,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         token.user = {
           id: data.user.id,
           name: data.user.name,
+          surname: data.user.surname,
           email: data.user.email,
           role: data.user.role,
           image: data.user.image,
@@ -177,6 +181,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         token.user = {
           id: user.user.id,
           name: user.user.name,
+          surname: user.user.surname,
           email: user.user.email,
           sub: user.user.id,
           role: user.user.role,

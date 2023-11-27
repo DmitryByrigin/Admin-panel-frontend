@@ -8,6 +8,7 @@ import { FiMail } from 'react-icons/fi';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 import Link from 'next/link';
 import { useContext } from 'react';
+import { Logo } from '@/components/icons';
 
 import { usePathname } from 'next/navigation';
 import { SidebarContext } from '@/app/sidebar/SidebarContext';
@@ -40,14 +41,14 @@ const Sidebar = () => {
   const { isCollapsed, toggleSidebarcollapse } = useContext(SidebarContext);
 
   return (
-    <div className="sidebar__wrapper">
+    <div className="sidebar__wrapper mr-7 max-sm:hidden">
       <button className="btn" onClick={toggleSidebarcollapse}>
         {isCollapsed ? <MdKeyboardArrowRight /> : <MdKeyboardArrowLeft />}
       </button>
       <aside className="sidebar" data-collapse={isCollapsed}>
         <div className="sidebar__top">
-          <Image width={80} height={80} className="sidebar__logo" src="/logo.jpg" alt="logo" />
-          <p className="sidebar__logo-name">The Brave Coders</p>
+          <Logo width={80} height={80} className="sidebar__logo" src="/logo.jpg" alt="logo" />
+          <p className="sidebar__logo-name">BEST-WEB-DESIGN</p>
         </div>
         <ul className="sidebar__list">
           {sidebarItems.map(({ name, href, icon: Icon }) => {

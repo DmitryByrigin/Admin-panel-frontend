@@ -20,7 +20,7 @@ import { logout } from '@/lib/actions';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 
-const userIcon = () => {
+const iconUser = ({ userEmail }) => {
   // const session = await auth();
   function logout() {
     signOut();
@@ -43,7 +43,7 @@ const userIcon = () => {
       <DropdownMenu aria-label="Profile Actions" variant="flat">
         <DropdownItem key="profile" className="h-14 gap-2">
           <p className="font-semibold">Signed in as</p>
-          <p className="font-semibold">zoey@example.com</p>
+          <p className="font-semibold">{userEmail}</p>
         </DropdownItem>
         <DropdownItem key="settings">My Settings</DropdownItem>
         <DropdownItem key="team_settings">Team Settings</DropdownItem>
@@ -61,4 +61,4 @@ const userIcon = () => {
   );
 };
 
-export default userIcon;
+export default iconUser;

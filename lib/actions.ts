@@ -24,6 +24,7 @@ export default async function register(prevState: string | undefined, formData: 
     method: 'POST',
     body: JSON.stringify({
       name: data.name,
+      surname: data.surname,
       email: data.email,
       password: data.password,
     }),
@@ -33,28 +34,9 @@ export default async function register(prevState: string | undefined, formData: 
     },
   });
   if (res.status === 409) {
-    return { message: 'Email duplicated' };
+    return { message: 'You have already been registered before!' };
   }
   await signIn('credentials', data, { callbackUrl: `/dashboard/user` });
-  /*
-        } catch (error) {
-            console.log(error)
-            if ((error as Error).message.includes('email duplicated')) {
-                return {message: 'email duplicated'};
-            }
-            throw error;
-        }*/
-
-  // console.log(await res.json());
-
-  /*if (!res.ok) {
-        if (res.status === 409) {
-            console.log('Пользователь уже существует');
-        } else {
-            console.log('Ошибка при выполнении fetch:', res.status, res.statusText);
-        }
-        return;
-    }*/
 }
 export async function login(formData: FormData) {
   const data = Object.fromEntries(formData);
@@ -64,11 +46,33 @@ export async function login(formData: FormData) {
     schemaLogin.parse(data);
   } catch (error) {
     console.error('Ошибка валидации:', error);
-    return data;
+    return { error: 'Ошибка валидации: ' + error };
+  }
+
+  const res = await fetch(Backend_URL + '/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: data.email,
+      password: data.password,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (res.status === 401) {
+    return { error: 'This user does not exist!' };
+  }
+
+  if (!res.ok) {
+    console.error('Ошибка при выполнении fetch:', res.status, res.statusText);
+    // Handle other errors if needed
+    return { error: 'An error occurred during login.' };
   }
 
   await signIn('credentials', data, { callbackUrl: '/dashboard' });
 }
+
 export async function logout() {
   await signOut();
   redirect('/');

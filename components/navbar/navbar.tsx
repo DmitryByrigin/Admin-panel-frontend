@@ -69,15 +69,15 @@ export default async function Navbar() {
 
   return (
     <>
-      <NextUINavbar maxWidth="full" shouldHideOnScroll>
+      <NextUINavbar className="flex items-start" maxWidth="full" shouldHideOnScroll>
         <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
           <NavbarBrand as="li" className="gap-3 max-w-fit">
             <NextLink className="flex justify-start items-center gap-1" href="/">
-              <Logo />
-              <p className="font-bold text-inherit">BEST-WEB</p>
+              {/* <Logo />
+              <p className="font-bold text-inherit">BEST-WEB</p> */}
             </NextLink>
           </NavbarBrand>
-          <ul className="hidden lg:flex gap-4 justify-start ml-2">
+          <ul className="flex gap-4 justify-start ml-2">
             {siteConfig.navItems.map((item) => (
               <NavbarItem key={item.href}>
                 <NextLink
@@ -100,6 +100,7 @@ export default async function Navbar() {
               <GithubIcon className="text-default-500" />
             </Link>
           </NavbarItem>
+          <ThemeSwitch />
           <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         </NavbarContent>
 
@@ -108,7 +109,7 @@ export default async function Navbar() {
             <GithubIcon className="text-default-500" />
           </Link>
           <ThemeSwitch />
-          <NavbarMenuToggle />
+          <NavbarMenuToggle className="" />
         </NavbarContent>
 
         <NavbarMenu>
@@ -132,12 +133,12 @@ export default async function Navbar() {
             ))}
           </div>
         </NavbarMenu>
-        <ThemeSwitch />
-        <IconUser />
-        <div>
-          <h1>{session.user.name}</h1>
-          <h3>{session.user.role}</h3>
-        </div>
+        {/* <ThemeSwitch /> */}
+        <IconUser userEmail={session?.user.email} />
+        <NavbarItem className="flex flex-col max-md:hidden">
+          <h1 className="font-bold">{session.user.name}</h1>
+          <h3 className="text-xs text-primary-500">{session.user.role}</h3>
+        </NavbarItem>
       </NextUINavbar>
     </>
   );

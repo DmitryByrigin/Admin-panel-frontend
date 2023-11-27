@@ -6,7 +6,7 @@ import { Providers } from './providers';
 import Navbar from '@/components/navbar/navbar';
 import clsx from 'clsx';
 import { auth } from '@/auth';
-import Sidebar from '@/components/Sidebar';
+import Sidebar from '@/components/sidebar/Sidebar';
 import { SidebarProvider } from './sidebar/SidebarContext';
 // import Sidebar from "@/components/sidebar/Sidebar";
 
@@ -31,14 +31,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={clsx('bg-background font-sans antialiased', fontSans.variable)}>
+      <body
+        className={clsx(
+          'bg-background font-sans antialiased',
+          fontSans.variable,
+          !session && 'flex justify-center align-center items-center h-screen',
+        )}>
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
           <SidebarProvider>
-            {session && <Navbar />}
-
-            <div className="layout">
+            <div className="flex">
               {session && <Sidebar />}
-              <main>{children}</main>
+              <div className="flex flex-col flex-grow">
+                {session && <Navbar />}
+                <main className="flex-grow">{children}</main>
+              </div>
             </div>
           </SidebarProvider>
         </Providers>

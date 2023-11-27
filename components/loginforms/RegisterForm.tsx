@@ -5,7 +5,6 @@ import main from '#/public/main.jpg';
 import { ThemeSwitch } from '@/components/theme-switch';
 import style from '@/app/authorization/login/page.module.css';
 import { IconAt, IconEyeClosed, IconEyeFilled, IconUserCircle } from '@tabler/icons-react';
-import { SubmitButton } from '../shared/SubmitButtonLogin';
 import NextLink from 'next/link';
 import GoogleButton from '@/components/GoogleButton';
 import PasswordInput from '@/components/loginforms/PasswordInput';
@@ -91,18 +90,18 @@ export default function RegisterForm() {
 
                 <article className=" flex px-3 mb-2">
                   <Input
-                    {...register('lastName')}
-                    value={watch('lastName')}
-                    type="name"
-                    label="Last name"
+                    {...register('surname')}
+                    value={watch('surname')}
+                    type="surname"
+                    label="Surname"
                     placeholder="Smith"
                     labelPlacement="outside"
-                    color={!watch('lastName') ? 'default' : errors.lastName ? 'danger' : 'success'}
+                    color={!watch('surname') ? 'default' : errors.surname ? 'danger' : 'success'}
                     errorMessage={
                       <strong>
-                        {errors.lastName
-                          ? errors.lastName.message
-                          : watch('lastName') && errors.lastName?.message}
+                        {errors.surname
+                          ? errors.surname.message
+                          : watch('surname') && errors.surname?.message}
                       </strong>
                     }
                     // onValueChange={setValue}
@@ -111,7 +110,7 @@ export default function RegisterForm() {
                       <IconUserCircle className="text-2xl text-default-400 pointer-events-none" />
                     }
                   />
-                  {/*<p>{errors.lastName}</p>*/}
+                  {/*<p>{errors.surname}</p>*/}
                 </article>
               </div>
 
@@ -199,7 +198,7 @@ export default function RegisterForm() {
                   </NextLink>
                 </p>
               </article>
-              <div className="text-danger">
+              <div className="text-danger mb-7 mx-8">
                 <strong>{state?.message}</strong>
               </div>
 

@@ -10,14 +10,14 @@ export const schema = z.object({
     .max(50, 'Name must be less than 50 characters.')
     .refine((name) => /[A-Z]/.test(name), 'Password name must be at least 1 uppercase letter.'),
 
-  lastName: z
+  surname: z
     .string()
     .nonempty('Last name is required.')
     .regex(/^[a-zA-Z0-9_]*$/, 'Only alphanumeric and underscore characters.')
     .min(2, 'Last name must be at least 2 characters.')
     .max(50, 'Last name must be less than 50 characters.')
     .refine(
-      (lastName) => /[A-Z]/.test(lastName),
+      (surname) => /[A-Z]/.test(surname),
       'Password name must be at least 1 uppercase letter.',
     ),
   password: z
