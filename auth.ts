@@ -108,8 +108,8 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     }),
     Credentials({
       async authorize(credentials) {
-        console.log('authorize');
-        console.log(credentials);
+        // console.log('authorize');
+        // console.log(credentials);
         const parsedCredentials = z
           .object({
             //TODO fix validation

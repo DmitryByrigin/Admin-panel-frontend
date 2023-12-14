@@ -32,19 +32,19 @@ const ProfilePage = async (props: Props) => {
   });
 
   const user = await response.json();
-  console.log(user);
+  // console.log(user);
 
-  if (session?.user.role !== 'ADMIN') {
-    // throw new Error('You need be an admin');
-    console.log('You need be an admin');
-  }
+  // if (session?.user.role !== 'ADMIN') {
+  //   // throw new Error('You need be an admin');
+  //   console.log('You need be an admin');
+  // }
 
   return (
     <>
       <h1 className="text-2xl font-bold pb-3 pl-3">User profile</h1>
       <Card
         isBlurred
-        className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px]"
+        className="border-none bg-background/60 dark:bg-default-100/50 mx-3"
         shadow="sm">
         <CardBody>
           <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4 items-center justify-center">

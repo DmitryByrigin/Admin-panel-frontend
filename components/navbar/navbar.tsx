@@ -134,7 +134,7 @@ export default async function Navbar() {
           </div>
         </NavbarMenu>
         {/* <ThemeSwitch /> */}
-        <IconUser userEmail={session?.user.email} />
+        <IconUser userEmail={session?.user.email} userId={session?.user.id} />
         <NavbarItem className="flex flex-col max-md:hidden">
           <h1 className="font-bold">{session.user.name}</h1>
           <h3 className="text-xs text-primary-500">{session.user.role}</h3>

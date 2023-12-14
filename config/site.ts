@@ -10,7 +10,7 @@ export const siteConfig = {
     // },
     {
       label: 'Blog',
-      href: '/blog',
+      href: '/dashboard/blog',
     },
     // {
     //   label: 'About',

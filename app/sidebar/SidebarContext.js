@@ -5,12 +5,12 @@ import clsx from 'clsx';
 import { fontSans } from '@/config/fonts';
 import { Providers } from '../providers';
 
-const initialValue = { isCollapsed: false };
+const initialValue = { isCollapsed: true };
 
 const SidebarContext = createContext(initialValue);
 
 const SidebarProvider = ({ children }) => {
-  const [isCollapsed, setCollapse] = useState(false);
+  const [isCollapsed, setCollapse] = useState(true);
 
   const toggleSidebarcollapse = () => {
     setCollapse((prevState) => !prevState);

@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { auth } from '@/auth';
 import Sidebar from '@/components/sidebar/Sidebar';
 import { SidebarProvider } from './sidebar/SidebarContext';
+import { SessionProvider } from 'next-auth/react';
 // import Sidebar from "@/components/sidebar/Sidebar";
 
 export const metadata: Metadata = {
@@ -27,25 +28,32 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const session = await auth();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
         className={clsx(
           'bg-background font-sans antialiased',
           fontSans.variable,
           !session && 'flex justify-center align-center items-center h-screen',
-        )}>
+        )}
+      >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'light' }}>
           <SidebarProvider>
-            <div className="flex">
-              {session && <Sidebar />}
-              <div className="flex flex-col flex-grow">
-                {session && <Navbar />}
-                <main className="flex-grow">{children}</main>
+            <SessionProvider session={session}>
+              <div className="flex">
+                {session && <Sidebar />}
+                <div className="flex flex-col flex-grow">
+                  {session && <Navbar />}
+                  <main className="flex-grow">{children}</main>
+                </div>
               </div>
-            </div>
+            </SessionProvider>
           </SidebarProvider>
         </Providers>
       </body>

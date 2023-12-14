@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { Backend_URL } from '@/lib/Contants';
 import { schema, schemaLogin } from '@/lib/schema';
 
-export default async function register(prevState: string | undefined, formData: FormData) {
+export async function register(formData: FormData) {
   console.log('Register');
   const data = Object.fromEntries(formData);
   try {
@@ -34,13 +34,13 @@ export default async function register(prevState: string | undefined, formData: 
     },
   });
   if (res.status === 409) {
-    return { message: 'You have already been registered before!' };
+    return { error: 'You have already been registered before!' };
   }
   await signIn('credentials', data, { callbackUrl: `/dashboard/user` });
 }
 export async function login(formData: FormData) {
+  // console.log(formData);
   const data = Object.fromEntries(formData);
-  console.log(data);
 
   try {
     schemaLogin.parse(data);

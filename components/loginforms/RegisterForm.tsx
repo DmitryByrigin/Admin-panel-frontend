@@ -8,7 +8,7 @@ import { IconAt, IconEyeClosed, IconEyeFilled, IconUserCircle } from '@tabler/ic
 import NextLink from 'next/link';
 import GoogleButton from '@/components/GoogleButton';
 import PasswordInput from '@/components/loginforms/PasswordInput';
-import actionRegister from '@/lib/actions';
+import { register as actionRegister } from '@/lib/actions';
 import { IconUserSquareRounded } from '@tabler/icons-react';
 import ChangeImage from '@/components/ChangeImage';
 import { useFormState } from 'react-dom';
@@ -20,26 +20,35 @@ import { useForm } from 'react-hook-form';
 import { schema } from '@/lib/schema';
 import { SubmitButtonRegister } from '../shared/SubmitButtonRegister';
 
-const initialState = {
-  message: null,
-};
-
 export default function RegisterForm() {
   const {
     register,
     watch,
-    formState: { errors },
+    trigger,
+    setError,
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm({
     resolver: zodResolver(schema),
     mode: 'onChange',
   });
 
-  const [state, formAction] = useFormState(actionRegister, initialState);
-
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   // console.log(value);
+
+  const onSubmit = async (formData: FormData) => {
+    trigger();
+    if (!isValid) return;
+    const dataForm = await actionRegister(formData);
+    console.log(dataForm?.error);
+    if (dataForm?.error) {
+      setError('form', {
+        type: 'manual',
+        message: dataForm.error,
+      });
+    }
+  };
 
   // @ts-ignore
   return (
@@ -59,7 +68,7 @@ export default function RegisterForm() {
             <p>Enter your information to register</p>
           </div>
 
-          <form action={formAction}>
+          <form action={onSubmit}>
             <section>
               <div className="flex flex-col mx-6">
                 <article className="flex px-3 mb-2">
@@ -180,32 +189,27 @@ export default function RegisterForm() {
                           )}
                         </button>
                       }
-                      // type={isVisible ? 'text' : 'password'}
-                      // onChange={(e) => validate('password', e.target.value)}
-                      // onBlur={() => setErrors({ ...errors, password: undefined })}
-                      // onFocus={(e) => validate('password', e.target.value)}
                     />
-                    {/*<p>{errors.password}</p>*/}
                   </div>
                 </article>
               </section>
 
-              <article>
-                <p className="mb-7 mx-8">
+              <article className="mb-3">
+                <p className="mb-2 mx-8">
                   Already Registered?{' '}
                   <NextLink href="/authorization/login" className="text-blue-600">
                     Login
                   </NextLink>
                 </p>
+                <strong className=" mx-8 text-danger-400 text-sm">
+                  {errors.form ? errors.form.message : watch('form') && errors.form?.message}
+                </strong>
               </article>
-              <div className="text-danger mb-7 mx-8">
-                <strong>{state?.message}</strong>
-              </div>
 
               <section className="flex -mx-2">
                 <article className="w-full px-3 mb-2">
                   <div className="flex items-center justify-center">
-                    <SubmitButtonRegister errors={errors} handleSubmit={handleSubmit()} />
+                    <SubmitButtonRegister />
                   </div>
 
                   <div className="flex items-center justify-center">

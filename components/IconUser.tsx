@@ -1,14 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import NextLink from 'next/link';
+import Link from 'next/link';
 import React from 'react';
 import {
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Link,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
@@ -20,12 +19,14 @@ import { logout } from '@/lib/actions';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 
-const iconUser = ({ userEmail }) => {
+const iconUser = ({ userEmail, userId }) => {
   // const session = await auth();
   function logout() {
     signOut();
     redirect('/');
   }
+
+  // console.log(userEmail, userId);
 
   return (
     <Dropdown placement="bottom-end">
@@ -45,7 +46,11 @@ const iconUser = ({ userEmail }) => {
           <p className="font-semibold">Signed in as</p>
           <p className="font-semibold">{userEmail}</p>
         </DropdownItem>
-        <DropdownItem key="settings">My Settings</DropdownItem>
+
+        <DropdownItem as={Link} href={`/dashboard/user/${userId}`} key="settings">
+          My Settings
+        </DropdownItem>
+
         <DropdownItem key="team_settings">Team Settings</DropdownItem>
         <DropdownItem key="analytics">Analytics</DropdownItem>
         <DropdownItem key="system">System</DropdownItem>

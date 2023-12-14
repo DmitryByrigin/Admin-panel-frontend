@@ -1,21 +1,13 @@
 'use client';
 import { Input } from '@nextui-org/input';
-import Image from 'next/image';
-import main from '#/public/main.jpg';
 import { ThemeSwitch } from '@/components/theme-switch';
-import style from '@/app/authorization/login/page.module.css';
 import { IconAt, IconEyeClosed, IconEyeFilled, IconUserCircle } from '@tabler/icons-react';
 
 import NextLink from 'next/link';
 import GoogleButton from '@/components/GoogleButton';
-import PasswordInput from '@/components/loginforms/PasswordInput';
 import { login } from '@/lib/actions';
-import { IconUserSquareRounded } from '@tabler/icons-react';
 import ChangeImage from '@/components/ChangeImage';
-import { useFormState } from 'react-dom';
-import { z } from 'zod';
-import { log } from 'util';
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { schema, schemaLogin } from '@/lib/schema';
@@ -25,15 +17,31 @@ export default function LoginForm() {
   const {
     register,
     watch,
-    formState: { errors },
-    handleSubmit,
+    trigger,
+    setError,
+    formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(schemaLogin),
     mode: 'onChange',
   });
 
+  // console.log(errors);
+
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const onSubmit = async (formData: FormData) => {
+    trigger();
+    if (!isValid) return;
+    const dataForm = await login(formData);
+    // console.log(dataForm?.error);
+    if (dataForm?.error) {
+      setError('form', {
+        type: 'manual',
+        message: dataForm.error,
+      });
+    }
+  };
 
   return (
     <section className="rounded-3xl shadow-xl overflow-hidden">
@@ -52,7 +60,7 @@ export default function LoginForm() {
             <p>Enter your information to login</p>
           </div>
 
-          <form action={login}>
+          <form action={onSubmit}>
             <section>
               <div className="flex flex-col mx-6">
                 <article className="flex px-3 mb-2">
@@ -84,6 +92,7 @@ export default function LoginForm() {
                       <Input
                         {...register('password')}
                         value={watch('password')}
+                        type="password"
                         label="Password"
                         name="password"
                         placeholder="Enter your password"
@@ -117,13 +126,17 @@ export default function LoginForm() {
                 </section>
               </div>
 
-              <article>
-                <p className="mb-7 mx-8">
+              <article className="mb-3">
+                <p className="mb-2 mx-8">
                   Forget password?{' '}
                   <NextLink href="/authorization/register" className="text-blue-600">
                     Register
                   </NextLink>
                 </p>
+
+                <strong className=" mx-8 text-danger-400 text-sm">
+                  {errors.form ? errors.form.message : watch('form') && errors.form?.message}
+                </strong>
               </article>
               {/* <div className="flex items-center justify-center text-danger">
                 {Object.values(errors).map((state, index) => (
@@ -136,7 +149,7 @@ export default function LoginForm() {
               <section className="flex -mx-2">
                 <article className="w-full px-3 mb-2">
                   <div className="flex items-center justify-center">
-                    <SubmitButtonLogin errors={errors} handleSubmit={handleSubmit()} />
+                    <SubmitButtonLogin />
                   </div>
 
                   <div className="flex items-center justify-center">
