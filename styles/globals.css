@@ -30,6 +30,10 @@
   justify-content: center;
 } */
 
+#react-aria {
+  display: none;
+}
+
 header {
   padding-left: 0px !important;
 }
@@ -123,4 +127,10 @@ header {
   cursor: pointer;
   transform: translateX(50%);
   font-size: 1.1rem;
+}
+
+
+[data-slot="tabList"] {
+  display: flex;
+  flex-direction: column;
 }

@@ -1,28 +1,69 @@
-import { Avatar, Button, Textarea } from '@nextui-org/react';
+import { Avatar, Button, Image, Textarea } from '@nextui-org/react';
 import { format } from 'date-fns';
+import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import LikeButton from '@/components/LikeButton';
+import { Backend_URL } from '@/lib/Contants';
+import BlogCard from '@/app/dashboard/blogComponents/blogCard';
 
 interface Props {
+  id: number;
   avatarImg: string;
   title: string;
   user: string;
   date: Date;
   postImg: string;
   content: string;
-  likes: number;
-  userImg: string;
+  like: string[];
+  views: string[];
+  postImage: string;
   coments: string;
 }
-export default function PostCard({
+export async function getData() {
+  const id = new URLSearchParams(id).toString();
+  const res = await fetch(`${Backend_URL}/blog/posts/${id}`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return await res.json();
+}
+
+const postList = posts.map((post) => (
+  <BlogCard
+    key={post.id}
+    id={post.id}
+    avatarImg=""
+    title={post.title}
+    content={post.content}
+    category={post.categories}
+    date={post.createdAt}
+    user={post.user.name + ' ' + post.user.surname}
+    postImage={post.image}
+    like={post.like}
+    views={post.views}
+  />
+));
+
+export default function Page({
+  id,
+  avatarImg,
   title,
   date,
-  postImg,
   content,
   user,
-  likes,
-  userImg,
+  like,
+  postImage,
   coments,
 }: Props) {
   const formattedDate = format(new Date(date), 'yyyy-MM-dd/HH:mm:ss');
+  const route = usePathname();
+  const { data: session } = useSession();
+  console.log(like);
+
   return (
     <div className="px-4 py-6 md:px-6 lg:py-16 md:py-12">
       <article className="prose prose-gray mx-auto dark:prose-invert">
@@ -35,12 +76,11 @@ export default function PostCard({
           </p>
         </div>
         <figure>
-          <img
+          <Image
             alt="Cover image"
-            className="aspect-video object-cover"
+            className="aspect-video object-cover max-w-5xl max-h-unit-9xl"
             height="340"
-            src={postImg}
-            width="1250"
+            src={postImage}
           />
           <figcaption className="text-gray-500">
             Image caption goes here
@@ -50,15 +90,12 @@ export default function PostCard({
       </article>
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-2">
-          <Avatar alt="User Avatar" className="w-8 h-8" src={userImg} />
+          <Avatar alt="User Avatar" className="w-8 h-8" src={avatarImg} />
           <span className="text-sm text-gray-600">Posted by {user}</span>
         </div>
         <div className="flex items-center space-x-2">
-          <Button className="text-red-500">
-            <HeartIcon className="w-4 h-4 mr-2" />
-            Like
-          </Button>
-          <div className="bg-red-100 text-red-500">{likes}</div>
+          <LikeButton initialLikes={like.length} id={id} />
+          <div className="bg-red-100 text-red-500">{like}</div>
         </div>
       </div>
       <section className="mt-8">
@@ -97,6 +134,7 @@ export default function PostCard({
             </div>
           </div>
         </div>
+
         <div className="mt-6 grid w-full gap-2">
           <Textarea placeholder="Type your comment here." />
           <Button variant="bordered">Post Comment</Button>
@@ -106,21 +144,21 @@ export default function PostCard({
   );
 }
 
-function HeartIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-    </svg>
-  );
-}
+// function HeartIcon(props) {
+//   return (
+//     <svg
+//       {...props}
+//       xmlns="http://www.w3.org/2000/svg"
+//       width="24"
+//       height="24"
+//       viewBox="0 0 24 24"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="2"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     >
+//       <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+//     </svg>
+//   );
+// }

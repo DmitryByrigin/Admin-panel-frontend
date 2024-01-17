@@ -10,14 +10,14 @@ export const siteConfig = {
     // },
     {
       label: 'Blog',
-      href: '/dashboard/blog',
+      href: '/dashboard/blog/categories',
     },
     // {
     //   label: 'About',
     //   href: '/about',
     // },
     {
-      label: 'Dashboard',
+      label: 'Create post',
       href: '/dashboard',
     },
   ],

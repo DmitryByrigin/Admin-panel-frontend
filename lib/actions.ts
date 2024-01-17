@@ -70,7 +70,9 @@ export async function login(formData: FormData) {
     return { error: 'An error occurred during login.' };
   }
 
-  await signIn('credentials', data, { callbackUrl: '/dashboard' });
+  await signIn('credentials', data, {
+    callbackUrl: '/dashboard/blog/categories',
+  });
 }
 
 export async function logout() {
@@ -88,3 +90,28 @@ export async function loginGoogle() {
   );
   redirect(url.replace('signin', 'api/auth/signin'));
 }
+
+// export async function incrementLike(session, id) {
+//   try {
+//     const response = await fetch(Backend_URL + `/blog/${id}/like`, {
+//       method: 'POST',
+//       headers: {
+//         Authorization: `Bearer ${session.backendTokens.accessToken}`,
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//
+//     if (response.ok) {
+//       const data = await response.json();
+//       console.log(data);
+//       return data?.countLikes || 0;
+//     } else {
+//       // Handle non-ok response if needed
+//       console.error('Non-ok response:', response.status, response.statusText);
+//       throw new Error('Failed to increment like.');
+//     }
+//   } catch (error) {
+//     console.error('Error handling like:', error);
+//     throw error; // Rethrow the error to be handled by the calling code
+//   }
+// }

@@ -50,7 +50,7 @@ export default async function RootLayout({
                 {session && <Sidebar />}
                 <div className="flex flex-col flex-grow">
                   {session && <Navbar />}
-                  <main className="flex-grow">{children}</main>
+                  <main className="flex-grow flex flex-col">{children}</main>
                 </div>
               </div>
             </SessionProvider>
