@@ -1,68 +1,71 @@
-import { Avatar, Button, Textarea } from '@nextui-org/react';
-import { format } from 'date-fns';
+import { Button } from '@nextui-org/button';
+import { Textarea } from '@nextui-org/input';
+import { Avatar } from '@nextui-org/react';
+import { Post } from '@/lib/types';
+import { Backend_URL } from '@/lib/Contants';
 
 interface Props {
-  avatarImg: string;
-  title: string;
-  user: string;
-  date: Date;
-  postImg: string;
-  content: string;
-  likes: number;
-  userImg: string;
-  coments: string;
+  params: {
+    id: number;
+  };
 }
-export default function PostCard({
-  title,
-  date,
-  postImg,
-  content,
-  user,
-  likes,
-  userImg,
-  coments,
-}: Props) {
-  const formattedDate = format(new Date(date), 'yyyy-MM-dd/HH:mm:ss');
+export async function getPost(id: number): Promise<Post> {
+  const res = await fetch(Backend_URL + `/blog/${id}`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}
+export default async function PostPage({ params }: Props) {
+  const post = await getPost(params.id);
   return (
     <div className="px-4 py-6 md:px-6 lg:py-16 md:py-12">
       <article className="prose prose-gray mx-auto dark:prose-invert">
         <div className="space-y-2 not-prose">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl lg:leading-[3.5rem]">
-            {title}
+            {post.title}
           </h1>
           <p className="text-gray-500 dark:text-gray-400">
-            Posted on {formattedDate}
+            Posted on December 9, 2023
           </p>
         </div>
+        <p>{}</p>
         <figure>
           <img
             alt="Cover image"
             className="aspect-video object-cover"
             height="340"
-            src={postImg}
+            src="/placeholder.svg"
             width="1250"
           />
           <figcaption className="text-gray-500">
             Image caption goes here
           </figcaption>
         </figure>
-        <p>{content}</p>
+        <p>
+          Continue with the rest of the post content here. Remember to break up
+          the text into multiple paragraphs for readability.
+        </p>
       </article>
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-2">
-          <Avatar alt="User Avatar" className="w-8 h-8" src={userImg} />
-          <span className="text-sm text-gray-600">Posted by {user}</span>
+          <Avatar alt="User Avatar" className="w-8 h-8" src="" />
+          <span className="text-sm text-gray-600">Posted by </span>
         </div>
         <div className="flex items-center space-x-2">
           <Button className="text-red-500">
             <HeartIcon className="w-4 h-4 mr-2" />
             Like
           </Button>
-          <div className="bg-red-100 text-red-500">{likes}</div>
+          <div className="bg-red-100 text-red-500"></div>
         </div>
       </div>
       <section className="mt-8">
-        <h2 className="font-semibold text-2xl mb-4">Coments</h2>
+        <h2 className="font-semibold text-2xl mb-4">Comments</h2>
         <div className="grid gap-4">
           <div className="flex items-start gap-4">
             <Avatar
@@ -72,12 +75,15 @@ export default function PostCard({
             ></Avatar>
             <div className="grid gap-1.5">
               <div className="flex items-center gap-2">
-                <div className="font-semibold">@{user}</div>
+                <div className="font-semibold">@user1</div>
                 <div className="text-gray-500 text-xs dark:text-gray-400">
-                  {formattedDate}
+                  2 days ago
                 </div>
               </div>
-              <div>{coments}</div>
+              <div>
+                This is a sample comment. The content of the comment would go
+                here.
+              </div>
             </div>
           </div>
           <div className="flex items-start gap-4">
@@ -88,12 +94,15 @@ export default function PostCard({
             ></Avatar>
             <div className="grid gap-1.5">
               <div className="flex items-center gap-2">
-                <div className="font-semibold">@{user}</div>
+                <div className="font-semibold">@user2</div>
                 <div className="text-gray-500 text-xs dark:text-gray-400">
-                  {formattedDate}
+                  1 day ago
                 </div>
               </div>
-              <div>{coments}</div>
+              <div>
+                This is another sample comment. The content of the comment would
+                go here.
+              </div>
             </div>
           </div>
         </div>
