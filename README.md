@@ -14,15 +14,21 @@ This is a template for creating applications using Next.js 13 (app directory) an
 
 ## Installation Next
 1. Install
-   
+```bash
+$ git clone
+```
 2. 
+```bash
+$ cd Admin-panel-frontend
+```
+3. 
 ```bash
 $ npm i
 ```
 
 ## Starting project
 ```bash
-$ npm dev
+$ npm run dev
 ```
 
 ## .env
@@ -40,7 +46,9 @@ $ npm dev
 
 ### QMDB_SECRET:
 
+1. Secret to your DB
 
+## How to use
 
 ### Use the template with create-next-app
 
