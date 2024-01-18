@@ -12,7 +12,34 @@ This is a template for creating applications using Next.js 13 (app directory) an
 - [Framer Motion](https://www.framer.com/motion/)
 - [next-themes](https://github.com/pacocoursey/next-themes)
 
-## How to Use
+## Installation Next
+1. Install
+   
+2. 
+```bash
+$ npm i
+```
+
+## Starting project
+```bash
+$ npm dev
+```
+
+## .env
+
+### NEXTAUTH_URL and NEXTAUTH_SECRET:
+
+1. NEXTAUTH_URL is your app's base URL
+2. NEXTAUTH_SECRET - It's a long random string that you can generate yourself. It is used to protect sessions.
+
+### GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET:
+
+1. To get these keys, you need to create a project in the Google Cloud Console.
+2. Next, you need to enable the Google+ API for your project.
+3. After that, you can create OAuth 2.0 credentials that will give you GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.
+
+### QMDB_SECRET:
+
 
 
 ### Use the template with create-next-app
