@@ -15,7 +15,7 @@ This is a template for creating applications using Next.js 13 (app directory) an
 ## Installation Next
 1. Install
 ```bash
-$ git clone
+$ git clone https://github.com/DmitryByrigin/Admin-panel-backend.git
 ```
 2. 
 ```bash
