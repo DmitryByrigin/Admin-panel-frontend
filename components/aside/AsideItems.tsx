@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import { Listbox, ListboxItem } from '@nextui-org/react';
+import Link from 'next/link';
 
 const categories = [
   'All',
@@ -10,30 +13,32 @@ const categories = [
   'Environment',
 ];
 
-// eslint-disable-next-line @next/next/no-async-client-component
-export default async function AsideItems() {
-  const [selectedKeys, setSelectedKeys] = React.useState(new Set(['text']));
-
-  // @ts-ignore
+export default function AsideItems() {
   return (
-    <div className="flex flex-col gap-2">
-      <Listbox
-        aria-label="Single selection example"
-        variant="flat"
-        disallowEmptySelection
-        // selectionMode="single"
-        selectedKeys={selectedKeys}
-        onSelectionChange={setSelectedKeys}
-        // onAction={(key) => setFilters(key)}
-      >
-        {categories.map((item, id) => (
-          <ListboxItem key={item}>{item}</ListboxItem>
-        ))}
-      </Listbox>
-
-      {/*<p className="text-small text-default-500">*/}
-      {/*  Selected value: {selectedValue}*/}
-      {/*</p>*/}
-    </div>
+    <>
+      {/*<ListboxWrapper>*/}
+      <div className="flex flex-col gap-2">
+        <Listbox
+          aria-label="Single selection example"
+          variant="solid"
+          disallowEmptySelection
+          selectionMode="single"
+          defaultSelectedKeys="All"
+          selectedKeys="All"
+          // onSelectionChange={setSelectedKeys}
+        >
+          {categories.map((item, id) => (
+            <ListboxItem
+              key={item}
+              href={`/dashboard/blog/categories/${item === 'All' ? '' : item}`}
+              as={Link}
+            >
+              {item}
+            </ListboxItem>
+          ))}
+        </Listbox>
+      </div>
+      {/*</ListboxWrapper>*/}
+    </>
   );
 }

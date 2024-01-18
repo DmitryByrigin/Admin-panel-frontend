@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import LikeButton from '@/components/LikeButton';
 import { Backend_URL } from '@/lib/Contants';
+import BlogCard from '@/app/dashboard/blogComponents/blogCard';
 
 interface Props {
   id: number;
@@ -18,12 +19,8 @@ interface Props {
   postImage: string;
   coments: string;
 }
-export async function getData({
-  searchParams,
-}: {
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) {
-  const id = new URLSearchParams(searchParams).toString();
+export async function getData() {
+  const id = new URLSearchParams(id).toString();
   const res = await fetch(`${Backend_URL}/blog/posts/${id}`, {
     cache: 'no-store',
   });
@@ -34,7 +31,24 @@ export async function getData({
 
   return await res.json();
 }
-export default function PostCard({
+
+const postList = posts.map((post) => (
+  <BlogCard
+    key={post.id}
+    id={post.id}
+    avatarImg=""
+    title={post.title}
+    content={post.content}
+    category={post.categories}
+    date={post.createdAt}
+    user={post.user.name + ' ' + post.user.surname}
+    postImage={post.image}
+    like={post.like}
+    views={post.views}
+  />
+));
+
+export default function Page({
   id,
   avatarImg,
   title,

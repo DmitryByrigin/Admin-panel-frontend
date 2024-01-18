@@ -1,20 +1,27 @@
 import React from 'react';
-import { Backend_URL } from '@/lib/Contants';
 import { Avatar } from '@nextui-org/react';
 
-const getComments = async (id) => {
-  const res = await fetch(`${Backend_URL}/blog//comments`, {
-    cache: 'no-store',
-  });
+// const GetComments = async (id: number) => {
+//   try {
+//     const res = await fetch(Backend_URL + `/blog/${id}/comments`, {
+//       cache: 'no-store',
+//     });
+//
+//     if (!res.ok) {
+//       throw new Error('Failed to fetch data');
+//     }
+//     const data = res.json();
+//     console.log(data);
+//     return data;
+//   } catch (error) {
+//     console.error('Error fetching comments:', error);
+//     return [];
+//   }
+// };
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch data');
-  }
-
-  return await res.json();
-};
-
-export default async function GetComments() {
+export default async function Comments({ id, text, user, createdAt }) {
+  // const commentsData = await GetComments(id);
+  // console.log(text);
   return (
     <div className="flex items-start gap-4">
       <Avatar
@@ -24,14 +31,12 @@ export default async function GetComments() {
       ></Avatar>
       <div className="grid gap-1.5">
         <div className="flex items-center gap-2">
-          <div className="font-semibold">@user1</div>
+          <div className="font-semibold">@{user}</div>
           <div className="text-gray-500 text-xs dark:text-gray-400">
-            2 days ago
+            {createdAt}
           </div>
         </div>
-        <div>
-          This is a sample comment. The content of the comment would go here.
-        </div>
+        <div>{text}</div>
       </div>
     </div>
   );

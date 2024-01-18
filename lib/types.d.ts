@@ -3,7 +3,9 @@ import { SVGProps } from 'react';
 export type User = {
   id: string;
   name: string;
+  surname: string;
   email: string;
+  role: string;
 };
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
@@ -26,4 +28,18 @@ export interface Blog {
   userimage: string;
   comments: string[];
   image: string;
+}
+
+export interface Post {
+  id: number;
+  image: string;
+  title: string;
+  content: string;
+  userId: string;
+  createdAt: Date;
+  like: string[];
+  views: string[];
+  categories: string[];
+
+  user: User;
 }
