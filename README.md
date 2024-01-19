@@ -4,30 +4,34 @@ This is a template of blog for creating applications using Next.js 14 (app direc
 
 ## Technologies Used
 
-- [Next.js 13](https://nextjs.org/docs/getting-started)
+- [Next.js 14](https://nextjs.org/docs/getting-started)
 - [NextUI v2](https://nextui.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+- [NextAuth](https://next-auth.js.org/)
 
-## Installation Next
-1. Install
+## Installation of project
+1. Download from repository
 ```bash
 $ git clone https://github.com/DmitryByrigin/Admin-panel-frontend.git
 ```
-2. 
+2. Go to the root folder of the project
 ```bash
 $ cd Admin-panel-frontend
 ```
-3. 
+3. Install all dependencies
 ```bash
 $ npm i
 ```
 
+## Important information
+
+### In the Contents.ts file, the lib folder, there should be a locale host on which the backend is running
+
 ## Starting project
 ```bash
+# This command is used to start a development server
 $ npm run dev
 ```
 
@@ -48,7 +52,11 @@ $ npm run dev
 
 1. Secret to your DB
 
+## Stay in touch
+
+- Authors - [Dmitry Burygin](https://github.com/DmitryByrigin?tab=overview&from=2023-12-01&to=2023-12-31),
+[Ponomarov Artem](https://github.com/Aspergillusplay)
 
 ## License
 
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+Licensed under the [MIT license](https://github.com/kamilmysliwiec).
