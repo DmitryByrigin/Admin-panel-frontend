@@ -25,16 +25,6 @@ $ cd Admin-panel-frontend
 $ npm i
 ```
 
-## Important information
-
-### In the Contents.ts file, the lib folder, there should be a locale host on which the backend is running
-
-## Starting project
-```bash
-# This command is used to start a development server
-$ npm run dev
-```
-
 ## .env
 
 ### NEXTAUTH_URL and NEXTAUTH_SECRET:
@@ -51,6 +41,18 @@ $ npm run dev
 ### QMDB_SECRET:
 
 1. Secret to your DB
+
+## Important information
+
+### In the Contents.ts file, the lib folder, there should be a locale host on which the backend is running
+
+## Starting project
+```bash
+# This command is used to start a development server
+$ npm run dev
+```
+
+
 
 ## Stay in touch
 
