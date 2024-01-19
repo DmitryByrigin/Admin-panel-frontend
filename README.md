@@ -1,6 +1,6 @@
 # Next.js & NextUI Template
 
-This is a template for creating applications using Next.js 13 (app directory) and NextUI (v2).
+This is a template of blog for creating applications using Next.js 14 (app directory), NextAuth and NextUI (v2).
 
 ## Technologies Used
 
@@ -48,27 +48,6 @@ $ npm run dev
 
 1. Secret to your DB
 
-## How to use
-
-### Use the template with create-next-app
-
-To create a new project based on this template using `create-next-app`, run the following command:
-
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
-
-### Install dependencies
-
-```bash
-npm install
-```
-
-### Run the development server
-
-```bash
-npm run dev
-```
 
 ## License
 
