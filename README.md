@@ -1,3 +1,5 @@
+# The production branch is not ready yet, so it is necessary to move to the development branch
+
 # Next.js & NextUI Template
 
 This is a template for creating applications using Next.js 13 (app directory) and NextUI (v2).
