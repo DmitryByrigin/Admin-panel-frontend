@@ -10,7 +10,7 @@ import {
   SelectItem,
   Textarea,
 } from '@nextui-org/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -43,15 +43,8 @@ const categoriesData = [
 
 export default function BlogPage() {
   const { data: session } = useSession();
-
-  // @ts-ignore
-  const [values, setValues] = React.useState<Selection>(
-    new Set(['technology']),
-  );
-  const handleSelectionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setValues(new Set(e.target.value.split(',')));
-  };
-  // console.log(values);
+  const [values, setValues] = useState(new Set(['technology', 'education']));
+  // console.log(values.size);
 
   const {
     register,
@@ -59,20 +52,44 @@ export default function BlogPage() {
     trigger,
     setError,
     handleSubmit,
+    setValue,
     formState: { errors, isValid },
-  } = useForm<PostSchemaType>({
+  } = useForm({
     resolver: zodResolver(schemaPost),
     mode: 'onChange',
   });
 
-  const onSubmit: SubmitHandler<PostSchemaType> = async (data) => {
-    data.categories.forEach((category) => {
-      console.log('categories', category);
-    });
+  // watch('file').length = 0;
 
-    trigger(); // Trigger validation
+  const handleSelectionChange = (e: { target: { value: string } }) => {
+    const selectedValues = new Set(e.target.value.split(','));
+    setValues(selectedValues);
 
-    if (!isValid) return;
+    setValue('categories', Array.from(selectedValues)); // Установите значение в форме
+  };
+
+  // console.log(values);
+  let [fileUploaded, setFileUploaded] = useState(false);
+  // console.log(watch('file').length);
+  // let file = watch('file');
+
+  // console.log(fileUploaded);
+
+  const onSubmit = async (data: {
+    file: (string | Blob)[];
+    title: string | Blob;
+    content: string | Blob;
+    categories: any[];
+  }) => {
+    // console.log('Form Data:', data);
+    // console.log('Form isValid:', isValid);
+    // console.log('Submit button clicked');
+    if (data.categories.length === 1) {
+      data.categories.push('');
+    }
+    console.log(data.file[0]);
+
+    // if (!isValid) return;
 
     const formData = new FormData();
 
@@ -82,13 +99,11 @@ export default function BlogPage() {
 
     formData.append('title', data.title);
     formData.append('content', data.content);
-
-    data.categories.forEach((category) => {
-      formData.append('categories', category);
-    });
-
-    // formData.append('categories', JSON.stringify(data.categories));
-    // formData.append('categories', []);
+    if (data.categories && Array.isArray(data.categories)) {
+      data.categories.forEach((category: string | Blob) => {
+        formData.append('categories', category);
+      });
+    }
 
     try {
       const res = await fetch(Backend_URL + '/blog', {
@@ -101,10 +116,9 @@ export default function BlogPage() {
 
       if (res.ok) {
         console.log('Blog creation successful');
-        // Дополнительная логика в случае успеха
+        // setFileUploaded(true);
       } else {
         console.error('Blog creation failed');
-        // Дополнительная логика в случае неудачи
       }
     } catch (error) {
       console.error('Error during submission:', error);
@@ -140,7 +154,9 @@ export default function BlogPage() {
                       htmlFor="fileinput"
                       className={`relative py-3 px-4 text-sm leading-5 rounded-xl text-default-600 border-0 transition-all duration-200 overflow-hidden cursor-pointer ${
                         errors.file
-                          ? 'text-green-500 bg-green-950 hover:bg-green-900'
+                          ? 'text-red-500 bg-red-950'
+                          : watch('file')?.length
+                          ? 'text-green-500 bg-green-950'
                           : 'text-default-600 bg-default-100'
                       }`}
                     >
@@ -150,22 +166,18 @@ export default function BlogPage() {
                         id="fileinput"
                         accept="image/*"
                         type="file"
-                        // onChange={(e) => {
-                        //   if (e.target.files && e.target.files.length > 0) {
-                        //     uploadImage(e.target.files[0]);
-                        //   }
-                        // }}
-                        // max={10000000}
                         name="file"
                         className="absolute left-0 top-0 w-full h-full opacity-0 cursor-pointer"
                       />
                     </label>
                     <strong
-                      className={!errors.file ? 'text-success' : 'text-danger'}
+                      className={errors.file ? 'text-danger' : 'text-success'}
                     >
                       {errors.file
                         ? errors.file.message
-                        : watch('file') && errors.file?.message}
+                        : watch('file')?.length
+                        ? 'yes'
+                        : ''}
                     </strong>
                   </article>
                 </section>
@@ -191,8 +203,8 @@ export default function BlogPage() {
                         !watch('title')
                           ? 'default'
                           : errors.title
-                            ? 'danger'
-                            : 'success'
+                          ? 'danger'
+                          : 'success'
                       }
                     />
                   </article>
@@ -220,8 +232,8 @@ export default function BlogPage() {
                         !watch('content')
                           ? 'default'
                           : errors.content
-                            ? 'danger'
-                            : 'success'
+                          ? 'danger'
+                          : 'success'
                       }
 
                       // className="max-w-xs"
@@ -240,7 +252,19 @@ export default function BlogPage() {
                   placeholder="Select an categories"
                   selectedKeys={values}
                   className="max-w-xs"
-                  onChange={handleSelectionChange}
+                  onSelectionChange={setValues}
+                  errorMessage={
+                    <strong>
+                      {values.size === 0 ? 'Category is required' : ''}
+                    </strong>
+                  }
+                  color={
+                    watch('categories')
+                      ? 'success'
+                      : values.size === 0
+                      ? 'danger'
+                      : 'success'
+                  }
                 >
                   {categoriesData.map((category) => (
                     <SelectItem key={category.value} value={category.value}>

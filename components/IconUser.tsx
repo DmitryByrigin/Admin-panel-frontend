@@ -47,15 +47,13 @@ const iconUser = ({ userEmail, userId }) => {
           <p className="font-semibold">{userEmail}</p>
         </DropdownItem>
 
-        <DropdownItem as={Link} href={`/dashboard/user/${userId}`} key="settings">
-          My Settings
+        <DropdownItem
+          as={Link}
+          href={`/dashboard/user/${userId}`}
+          key="settings"
+        >
+          Profile Settings
         </DropdownItem>
-
-        <DropdownItem key="team_settings">Team Settings</DropdownItem>
-        <DropdownItem key="analytics">Analytics</DropdownItem>
-        <DropdownItem key="system">System</DropdownItem>
-        <DropdownItem key="configurations">Configurations</DropdownItem>
-        <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
 
         <DropdownItem key="logout" color="danger" onClick={logout}>
           Log Out

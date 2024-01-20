@@ -1,5 +1,5 @@
 'use client';
-
+import { IconMessageShare } from '@tabler/icons-react';
 import Image from 'next/image';
 import { AiOutlineHome } from 'react-icons/ai';
 import { BsPeople } from 'react-icons/bs';
@@ -15,24 +15,14 @@ import { SidebarContext } from '@/app/sidebar/SidebarContext';
 
 const sidebarItems = [
   {
-    name: 'Home',
-    href: '/',
-    icon: AiOutlineHome,
+    name: 'Create post',
+    href: '/dashboard',
+    icon: IconMessageShare,
   },
   {
-    name: 'About',
-    href: '/dashboard/about',
+    name: 'Blog',
+    href: '/dashboard/blog/categories',
     icon: BsPeople,
-  },
-  {
-    name: 'Mails',
-    href: '/mails',
-    icon: FiMail,
-  },
-  {
-    name: 'Contact',
-    href: '/contact',
-    icon: TiContacts,
   },
 ];
 
@@ -47,7 +37,13 @@ const Sidebar = () => {
       </button>
       <aside className="sidebar" data-collapse={isCollapsed}>
         <div className="sidebar__top">
-          <Logo width={80} height={80} className="sidebar__logo" src="/logo.jpg" alt="logo" />
+          <Logo
+            width={80}
+            height={80}
+            className="sidebar__logo"
+            src="/logo.jpg"
+            alt="logo"
+          />
           <p className="sidebar__logo-name">BEST-WEB-DESIGN</p>
         </div>
         <ul className="sidebar__list">
@@ -55,8 +51,11 @@ const Sidebar = () => {
             return (
               <li className="sidebar__item" key={name}>
                 <Link
-                  className={`sidebar__link ${pathname === href ? 'sidebar__link--active' : ''}`}
-                  href={href}>
+                  className={`sidebar__link ${
+                    pathname === href ? 'sidebar__link--active' : ''
+                  }`}
+                  href={href}
+                >
                   <span className="sidebar__icon">
                     <Icon />
                   </span>

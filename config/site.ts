@@ -8,18 +8,18 @@ export const siteConfig = {
     //   label: 'Home',
     //   href: '/',
     // },
-    {
-      label: 'Blog',
-      href: '/dashboard/blog/categories',
-    },
+    // {
+    //   label: 'Blog',
+    //   href: '/dashboard/blog/categories',
+    // },
     // {
     //   label: 'About',
     //   href: '/about',
     // },
-    {
-      label: 'Create post',
-      href: '/dashboard',
-    },
+    // {
+    //   label: 'Create post',
+    //   href: '/dashboard',
+    // },
   ],
   navMenuItems: [
     {
@@ -56,7 +56,8 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: 'https://github.com/nextui-org/nextui',
+    github:
+      'https://github.com/DmitryByrigin/Admin-panel-frontend/tree/development',
     twitter: 'https://twitter.com/getnextui',
     docs: 'https://nextui.org',
     discord: 'https://discord.gg/9b6yyZKmH4',

@@ -18,6 +18,7 @@ interface Props {
   views: string[];
   postImage: string;
   coments: string;
+  hasImage: boolean;
 }
 export async function getData() {
   const id = new URLSearchParams(id).toString();
@@ -58,6 +59,7 @@ export default function Page({
   like,
   postImage,
   coments,
+  hasImage = false,
 }: Props) {
   const formattedDate = format(new Date(date), 'yyyy-MM-dd/HH:mm:ss');
   const route = usePathname();
@@ -76,12 +78,21 @@ export default function Page({
           </p>
         </div>
         <figure>
-          <Image
-            alt="Cover image"
-            className="aspect-video object-cover max-w-5xl max-h-unit-9xl"
-            height="340"
-            src={postImage}
-          />
+          {hasImage ? (
+            <Image
+              alt="Cover image"
+              className="aspect-video object-cover max-w-5xl max-h-unit-9xl"
+              height="340"
+              src={postImage}
+            />
+          ) : (
+            <div
+              className="aspect-video object-cover max-w-5xl max-h-unit-9xl"
+              style={{ width: '100%', height: '900px' }} // Set the desired size
+            >
+              <div className="bg-gray-200"></div>
+            </div>
+          )}
           <figcaption className="text-gray-500">
             Image caption goes here
           </figcaption>

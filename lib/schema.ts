@@ -119,12 +119,11 @@ export const schemaPost = z.object({
       (file) => ACCEPTED_IMAGE_TYPES.includes(file[0]?.type),
       `Поддерживаются только форматы .jpg, .jpeg, .png и .gif.`,
     ),
-
   title: z.string().min(1, 'Title is required.'),
 
   content: z.string().min(50, 'Content must be at least 50 characters..'),
 
-  categories: z.string().array(),
+  categories: z.string().array().min(1, 'Category is required.'),
 });
 
 export type PostSchemaType = z.infer<typeof schemaPost>;

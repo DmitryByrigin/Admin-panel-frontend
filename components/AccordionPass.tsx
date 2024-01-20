@@ -91,8 +91,8 @@ export default function AccordionPass() {
           !watch('password')
             ? 'default'
             : errors.password
-              ? 'danger'
-              : 'success'
+            ? 'danger'
+            : 'success'
         }
       ></Input>
       <h1>New password</h1>
@@ -114,8 +114,8 @@ export default function AccordionPass() {
           !watch('password')
             ? 'default'
             : errors.password
-              ? 'danger'
-              : 'success'
+            ? 'danger'
+            : 'success'
         }
       ></Input>
       <h1>Repeat password</h1>
@@ -137,8 +137,8 @@ export default function AccordionPass() {
           !watch('password')
             ? 'default'
             : errors.password
-              ? 'danger'
-              : 'success'
+            ? 'danger'
+            : 'success'
         }
       ></Input>
       <Button type="submit">Confirm</Button>
