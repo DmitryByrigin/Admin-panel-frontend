@@ -39,5 +39,9 @@ export default async function AllPosts({
     />
   ));
 
-  return <div>{postList.length == 0 ? <BlogCard /> : postList}</div>;
+  return (
+    <div className="w-full">
+      {postList.length == 0 ? <BlogCard /> : postList}
+    </div>
+  );
 }

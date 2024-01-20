@@ -9,7 +9,7 @@ export default function BlogLayout({
 }) {
   return (
     <section className="flex justify-center gap-4 py-8 md:py-10 ">
-      <div className="flex items-start gap-10 w-full justify-center max-lg:flex-col">
+      <div className="flex items-start gap-10 w-full max-lg:flex-col">
         <aside className="flex w-1/4 max-lg:w-full">
           <Card className="p-4 w-full gap-6 ">
             <h2 className="text-lg font-semibold">Categories</h2>
@@ -23,7 +23,7 @@ export default function BlogLayout({
             </div>
           </Card>
         </aside>
-        <section className="flex space-y-8 w-1/7 max-lg:w-full">
+        <section className="flex space-y-8 w-full mr-5 max-lg:w-full">
           {children}
         </section>
       </div>

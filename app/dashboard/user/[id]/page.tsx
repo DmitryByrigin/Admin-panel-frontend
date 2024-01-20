@@ -7,6 +7,7 @@ import { Card, CardBody, Image } from '@nextui-org/react';
 // import { IconAlertCircle, IconKey } from '@tabler/icons';
 // import { NextIcon } from './NextIcon';
 import AccordionPass from '../../../../components/AccordionPass';
+import ProfileImage from '@/components/ProfileImage';
 
 type Props = {
   req: (Partial<IncomingMessage> & { body?: any }) | undefined;
@@ -75,6 +76,7 @@ const ProfilePage = async ({ params: { id } }: Props) => {
                 {' '}
                 <AccordionPass />
               </div>
+              <ProfileImage id={id} />
             </div>
           </div>
         </CardBody>
