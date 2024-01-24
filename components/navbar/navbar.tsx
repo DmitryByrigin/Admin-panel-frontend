@@ -28,22 +28,14 @@ import {
   SearchIcon,
 } from '@/components/icons';
 
-import { Logo } from '@/components/icons';
-import SingInButton from './SingInButton';
-import {
-  Avatar,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  user,
-} from '@nextui-org/react';
 import IconUser from '../IconUser';
 import { auth } from '@/auth';
+import { getUser } from '@/app/dashboard/user/[id]/page';
 
 export default async function Navbar() {
   const session = await auth();
-
+  const user = await getUser(session?.user.id, session);
+  console.log(session?.user.id)
   const searchInput = (
     <Input
       aria-label="Search"
@@ -74,14 +66,14 @@ export default async function Navbar() {
         maxWidth="full"
         shouldHideOnScroll
       >
-        <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+        {/*<NavbarContent className="basis-1/5 sm:basis-full" justify="start">
           <NavbarBrand as="li" className="gap-3 max-w-fit">
             <NextLink
               className="flex justify-start items-center gap-1"
               href="/"
             >
-              {/* <Logo />
-              <p className="font-bold text-inherit">BEST-WEB</p> */}
+               <Logo />
+              <p className="font-bold text-inherit">BEST-WEB</p>
             </NextLink>
           </NavbarBrand>
           <ul className="flex gap-4 justify-start ml-2">
@@ -100,7 +92,7 @@ export default async function Navbar() {
               </NavbarItem>
             ))}
           </ul>
-        </NavbarContent>
+        </NavbarContent>*/}
 
         <NavbarContent
           className="hidden sm:flex basis-1/5 sm:basis-full"
@@ -120,36 +112,35 @@ export default async function Navbar() {
             <GithubIcon className="text-default-500" />
           </Link>
           <ThemeSwitch />
-          <NavbarMenuToggle className="" />
+          {/*<NavbarMenuToggle className="" />*/}
         </NavbarContent>
 
-        <NavbarMenu>
-          {searchInput}
-          <div className="mx-4 mt-2 flex flex-col gap-2">
-            {siteConfig.navMenuItems.map((item, index) => (
-              <NavbarMenuItem key={`${item}-${index}`}>
-                <Link
-                  color={
-                    index === 2
-                      ? 'primary'
-                      : index === siteConfig.navMenuItems.length - 1
-                      ? 'danger'
-                      : 'foreground'
-                  }
-                  href="#"
-                  size="lg"
-                >
-                  {item.label}
-                </Link>
-              </NavbarMenuItem>
-            ))}
-          </div>
-        </NavbarMenu>
-        {/* <ThemeSwitch /> */}
-        <IconUser userEmail={session?.user.email} userId={session?.user.id} />
+        {/*<NavbarMenu>*/}
+        {/*  {searchInput}*/}
+        {/*  <div className="mx-4 mt-2 flex flex-col gap-2">*/}
+        {/*    {siteConfig.navMenuItems.map((item, index) => (*/}
+        {/*      <NavbarMenuItem key={`${item}-${index}`}>*/}
+        {/*        <Link*/}
+        {/*          color={*/}
+        {/*            index === 2*/}
+        {/*              ? 'primary'*/}
+        {/*              : index === siteConfig.navMenuItems.length - 1*/}
+        {/*              ? 'danger'*/}
+        {/*              : 'foreground'*/}
+        {/*          }*/}
+        {/*          href="#"*/}
+        {/*          size="lg"*/}
+        {/*        >*/}
+        {/*          {item.label}*/}
+        {/*        </Link>*/}
+        {/*      </NavbarMenuItem>*/}
+        {/*    ))}*/}
+        {/*  </div>*/}
+        {/*</NavbarMenu>*/}
+        <IconUser user={user}/>
         <NavbarItem className="flex flex-col max-md:hidden">
-          <h1 className="font-bold">{session.user.name}</h1>
-          <h3 className="text-xs text-primary-500">{session.user.role}</h3>
+          <h1 className="font-bold">{session?.user.name}</h1>
+          <h3 className="text-xs text-primary-500">{session?.user.role}</h3>
         </NavbarItem>
       </NextUINavbar>
     </>

@@ -36,11 +36,14 @@ export default function RegisterForm() {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   // console.log(value);
+  const [isLoading, setIsLoading] = useState(null);
 
   const onSubmit = async (formData: FormData) => {
-    trigger();
+    await trigger();
     if (!isValid) return;
+    setIsLoading(true);
     const dataForm = await actionRegister(formData);
+    setIsLoading(false);
     console.log(dataForm?.error);
     if (dataForm?.error) {
       setError('form', {
@@ -161,6 +164,7 @@ export default function RegisterForm() {
                     <Input
                       {...register('password')}
                       value={watch('password')}
+                      type={isVisible ? "text" : "password"}
                       label="Password"
                       name="password"
                       // variant="bordered"
@@ -209,7 +213,7 @@ export default function RegisterForm() {
               <section className="flex -mx-2">
                 <article className="w-full px-3 mb-2">
                   <div className="flex items-center justify-center">
-                    <SubmitButtonRegister />
+                    <SubmitButtonRegister isLoading={isLoading} />
                   </div>
 
                   <div className="flex items-center justify-center">

@@ -185,7 +185,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           email: user.user.email,
           sub: user.user.id,
           role: user.user.role,
-        };
+        }
         // console.log('jwt-token-c', token)
       }
       //return token;
@@ -194,7 +194,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         return await refreshToken(token);
       }
-      return token;
+      return token
     },
 
     async session({ session, token, user }) {

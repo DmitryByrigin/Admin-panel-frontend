@@ -5,6 +5,7 @@ import { Backend_URL } from '@/lib/Contants';
 import { useSession } from 'next-auth/react';
 import { Button } from '@nextui-org/react';
 import { IconEye } from '@tabler/icons-react';
+import {Chip} from "@nextui-org/react";
 
 export const ReportView: React.FC<{ id: number }> = ({ id }) => {
   const { data: session } = useSession();
@@ -34,11 +35,17 @@ export const ReportView: React.FC<{ id: number }> = ({ id }) => {
   }, [id]);
 
   return (
-    <div className="flex items-center space-x-2">
-      <Button>
-        <IconEye className="w-4 h-4" />
+
+
+      <Chip
+          className='w-60 h-10 rounded-xl cursor-default'
+          startContent={<IconEye size={20} className='mr-1 ml-2'/>}
+          color="default"
+      >
         {views} Views
-      </Button>
-    </div>
+      </Chip>
+
+
+
   );
 };

@@ -6,45 +6,52 @@ import {
   CardBody,
   Input,
   Select,
-  Selection,
   SelectItem,
   Textarea,
 } from '@nextui-org/react';
-import React, { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import React, {useEffect, useState} from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { PostSchemaType, schemaPost } from '@/lib/schema';
 import { useSession } from 'next-auth/react';
-import { Backend_URL } from '@/lib/Contants';
+import { postBlog } from '@/lib/actions';
+import {IconDownload} from "@tabler/icons-react";
 
 const categoriesData = [
   {
     label: 'Technology',
-    value: 'technology',
+    value: 'Technology',
   },
   {
     label: 'Health',
-    value: 'health',
+    value: 'Health',
   },
   {
     label: 'Business',
-    value: 'business',
+    value: 'Business',
   },
   {
     label: 'Education',
-    value: 'education',
+    value: 'Education',
   },
   {
     label: 'Environment',
-    value: 'environment',
+    value: 'Environment',
   },
 ];
-
+type FormValues = {
+  file: Array<(string | Blob)>
+  title: string;
+  content: string;
+  categories: Array<string>;
+}
 export default function BlogPage() {
   const { data: session } = useSession();
-  const [values, setValues] = useState(new Set(['technology', 'education']));
-  // console.log(values.size);
+  // const [values, setValues] = useState(new Set(['technology']));
+
+  const [isLoading, setIsLoading] = useState(null);
+
 
   const {
     register,
@@ -53,90 +60,71 @@ export default function BlogPage() {
     setError,
     handleSubmit,
     setValue,
+    control,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<FormValues>({
     resolver: zodResolver(schemaPost),
     mode: 'onChange',
   });
 
-  // watch('file').length = 0;
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    setIsLoading(true);
+    await trigger();
 
-  const handleSelectionChange = (e: { target: { value: string } }) => {
-    const selectedValues = new Set(e.target.value.split(','));
-    setValues(selectedValues);
-
-    setValue('categories', Array.from(selectedValues)); // Установите значение в форме
-  };
-
-  // console.log(values);
-  let [fileUploaded, setFileUploaded] = useState(false);
-  // console.log(watch('file').length);
-  // let file = watch('file');
-
-  // console.log(fileUploaded);
-
-  const onSubmit = async (data: {
-    file: (string | Blob)[];
-    title: string | Blob;
-    content: string | Blob;
-    categories: any[];
-  }) => {
-    // console.log('Form Data:', data);
-    // console.log('Form isValid:', isValid);
-    // console.log('Submit button clicked');
-    if (data.categories.length === 1) {
-      data.categories.push('');
-    }
-    console.log(data.file[0]);
-
-    // if (!isValid) return;
+    if (!isValid) return;
 
     const formData = new FormData();
-
     if (data.file) {
       formData.append('image', data.file[0]);
     }
 
     formData.append('title', data.title);
     formData.append('content', data.content);
-    if (data.categories && Array.isArray(data.categories)) {
-      data.categories.forEach((category: string | Blob) => {
-        formData.append('categories', category);
+    if (data.categories) {
+      data.categories.forEach((category: string) => {
+        formData.append('categories[]', category);
       });
     }
 
-    try {
-      const res = await fetch(Backend_URL + '/blog', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${session?.backendTokens.accessToken}`,
-        },
-      });
+    const result = await postBlog(formData, session);
 
-      if (res.ok) {
-        console.log('Blog creation successful');
-        // setFileUploaded(true);
-      } else {
-        console.error('Blog creation failed');
-      }
-    } catch (error) {
-      console.error('Error during submission:', error);
+    setIsLoading(false);
+    return result;
+  };
+
+
+    const [fileName, setFileName] = useState('Выберите файл');
+
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      setFileName(e.target.files[0].name);
+    } else {
+      setFileName('Необходимо выбрать хотя бы один файл');
     }
   };
+
+  const file = watch('file');
+  useEffect(() => {
+    if (file && file.length > 0) {
+      setFileName(file[0].name);
+    } else {
+      setFileName('Необходимо выбрать хотя бы один файл');
+    }
+  }, [file]);
+
 
   return (
     <>
       <section>
-        <h1 className="text-2xl font-bold pb-3 pl-3">Blog</h1>
+        <h1 className='text-2xl font-bold pb-3 pl-3'>Blog</h1>
         <Card
           isBlurred
-          className="border-none bg-background/60 dark:bg-default-100/50 mx-3"
-          shadow="sm"
+          className='border-none bg-background/60 dark:bg-default-100/50 mx-3'
+          shadow='sm'
         >
           <CardBody>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="flex flex-col gap-6 md:gap-4 justify-center items-stretch">
+              <div className='flex flex-col gap-6 md:gap-4 justify-center items-stretch'>
                 {/* <div className="relative col-span-6 md:col-span-4">
               <Image
                 alt="Album cover"
@@ -148,140 +136,147 @@ export default function BlogPage() {
               />
             </div> */}
 
-                <section className="flex mx-3">
-                  <article className="w-full my-3">
-                    <label
-                      htmlFor="fileinput"
-                      className={`relative py-3 px-4 text-sm leading-5 rounded-xl text-default-600 border-0 transition-all duration-200 overflow-hidden cursor-pointer ${
-                        errors.file
-                          ? 'text-red-500 bg-red-950'
-                          : watch('file')?.length
-                          ? 'text-green-500 bg-green-950'
-                          : 'text-default-600 bg-default-100'
-                      }`}
-                    >
-                      <i className="fa fa-upload "></i> Upload image
-                      <input
-                        {...register('file', { required: 'File is required' })}
-                        id="fileinput"
-                        accept="image/*"
-                        type="file"
-                        name="file"
-                        className="absolute left-0 top-0 w-full h-full opacity-0 cursor-pointer"
-                      />
-                    </label>
-                    <strong
-                      className={errors.file ? 'text-danger' : 'text-success'}
-                    >
-                      {errors.file
-                        ? errors.file.message
-                        : watch('file')?.length
-                        ? 'yes'
-                        : ''}
-                    </strong>
+                <section className='flex mx-3 flex-row'>
+                  <article className='w-full mt-3 flex '>
+
+                    <div className="flex w-full">
+                      <label htmlFor="file_input"
+                             className="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <IconDownload size={60}/>
+                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or
+                            drag and drop</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.SIZE
+                            3mb)</p>
+                        </div>
+                        <input
+                            {...register('file', {required: 'File is required'})}
+                            id='file_input'
+                            accept='image/*'
+                            type='file'
+                            name='file'
+                            className='hidden'
+                            // onChange={handleFileChange}
+                        />
+
+                        <p className='text-sm text-gray-900 pb-3 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400'>{fileName}</p>
+                      </label>
+                    </div>
+
                   </article>
                 </section>
+                <strong
+                    className={errors.file ? 'text-danger text-sm ml-3' : 'text-success text-sm ml-3'}
+                >
+                  {errors.file
+                      ? errors.file.message
+                      : watch('file')?.length
+                          ? 'Image uploaded'
+                          : ''}
+                </strong>
+                <p>{}</p>
 
-                <section className="flex mx-3">
-                  <article className="w-full">
+                <section className='flex mx-3'>
+                  <article className='w-full'>
                     <Input
-                      {...register('title')}
-                      defaultValue={watch('title')}
-                      type="title"
-                      label="Title"
-                      name="title"
-                      placeholder="Enter blog title"
-                      labelPlacement="outside"
-                      errorMessage={
-                        <strong>
-                          {errors.title
-                            ? errors.title.message
-                            : watch('title') && errors.title?.message}
-                        </strong>
-                      }
-                      color={
-                        !watch('title')
-                          ? 'default'
-                          : errors.title
-                          ? 'danger'
-                          : 'success'
-                      }
+                        {...register('title')}
+                        defaultValue={watch('title')}
+                        type='title'
+                        label='Title'
+                        name='title'
+                        placeholder='Enter blog title'
+                        labelPlacement='outside'
+                        errorMessage={
+                          <strong>
+                            {errors.title
+                                ? errors.title.message
+                                : watch('title') && errors.title?.message}
+                          </strong>
+                        }
+                        color={
+                          !watch('title')
+                              ? 'default'
+                              : errors.title
+                                  ? 'danger'
+                                  : 'success'
+                        }
                     />
                   </article>
                 </section>
-                <section className="flex mx-3">
-                  <article className="w-full">
+                <section className='flex mx-3'>
+                  <article className='w-full'>
                     <Textarea
-                      {...register('content')}
-                      defaultValue={watch('content')}
-                      type="content"
-                      name="content"
-                      variant="bordered"
-                      labelPlacement="outside"
-                      label="Сontent"
-                      placeholder="Enter your content"
-                      // defaultValue="NextUI is a React UI library with..."
-                      errorMessage={
-                        <strong>
-                          {errors.content
-                            ? errors.content.message
-                            : watch('content') && errors.content?.message}
-                        </strong>
-                      }
-                      color={
-                        !watch('content')
-                          ? 'default'
-                          : errors.content
-                          ? 'danger'
-                          : 'success'
-                      }
+                        {...register('content')}
+                        defaultValue={watch('content')}
+                        type='content'
+                        name='content'
+                        variant='bordered'
+                        labelPlacement='outside'
+                        label='Сontent'
+                        placeholder='Enter your content'
+                        // defaultValue="NextUI is a React UI library with..."
+                        errorMessage={
+                          <strong>
+                            {errors.content
+                                ? errors.content.message
+                                : watch('content') && errors.content?.message}
+                          </strong>
+                        }
+                        color={
+                          !watch('content')
+                              ? 'default'
+                              : errors.content
+                                  ? 'danger'
+                                  : 'success'
+                        }
 
-                      // className="max-w-xs"
                     />
                   </article>
                 </section>
               </div>
 
               {/*<Checkbox defaultSelected className="mx-3 my-3">Save to history</Checkbox>*/}
-              <div className="flex flex-col items-start mx-3 my-3">
-                <Select
-                  {...register('categories')}
-                  name="categories"
-                  label="Categories"
-                  selectionMode="multiple"
-                  placeholder="Select an categories"
-                  selectedKeys={values}
-                  className="max-w-xs"
-                  onSelectionChange={setValues}
-                  errorMessage={
-                    <strong>
-                      {values.size === 0 ? 'Category is required' : ''}
-                    </strong>
-                  }
-                  color={
-                    watch('categories')
-                      ? 'success'
-                      : values.size === 0
-                      ? 'danger'
-                      : 'success'
-                  }
-                >
-                  {categoriesData.map((category) => (
-                    <SelectItem key={category.value} value={category.value}>
-                      {category.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-
-                <p className="text-small text-default-500">
-                  Selected: {Array.from(values).join(', ')}
-                </p>
+              <div className='flex flex-col items-start mx-3 my-3'>
+                <Controller control={control} rules={{required: true}}
+                            render={({field: {onChange, value}, fieldState: {invalid, error}}) => {
+                              return (
+                                  <Select
+                                  {...register('categories')}
+                                  name='categories'
+                                  label='Categories'
+                                  selectionMode='multiple'
+                                  value={value}
+                                  placeholder='Select an categories'
+                                  className='max-w-xs'
+                                  // errorMessage={error?.message}
+                                  onChange={(event) => onChange((event.target.value === '' ? undefined : event.target.value.split(',')))}
+                                  errorMessage={
+                                    <strong>
+                                      {error?.message}
+                                    </strong>
+                                  }
+                                  color={
+                                    value === undefined
+                                      ? 'default'
+                                      : error?.message
+                                        ? 'danger'
+                                        : 'success'
+                                  }
+                                >
+                                  {categoriesData.map((category) => (
+                                    <SelectItem key={category.value} value={category.value}>
+                                      {category.label}
+                                    </SelectItem>
+                                  ))}
+                                </Select>
+                              );
+                            }} name='categories' />
 
                 <Button
-                  // onClick={handleSaveBlogPost}
-                  type="submit"
-                  className="text-sm font-normal text-default-600 bg-default-100 p-6 my-3"
-                  variant="flat"
+                    type='submit'
+                    className={`text-sm font-normal text-default-600 bg-default-100 p-6 my-3 ${isLoading === null ? 'text-default-600' : 'text-green-500'}`}
+                    variant='flat'
+                    isLoading={isLoading}
                 >
                   Create post
                 </Button>

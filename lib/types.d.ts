@@ -6,6 +6,7 @@ export type User = {
   surname: string;
   email: string;
   role: string;
+  profileImage: string;
 };
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
@@ -40,6 +41,12 @@ export interface Post {
   like: string[];
   views: string[];
   categories: string[];
-
+  comments: Comment[];
+  user: User;
+}
+export interface Comment {
+  id: number;
+  text: string;
+  createdAt: Date;
   user: User;
 }

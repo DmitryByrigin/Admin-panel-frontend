@@ -1,5 +1,14 @@
 import BlogCard from '@/app/dashboard/blogComponents/blogCard';
 import { Backend_URL } from '@/lib/Contants';
+import { Post } from '@/lib/types';
+import {Avatar, Card, CardBody, CardHeader, Image} from "@nextui-org/react";
+import defaultIconUser from "@/public/user-circle.svg"
+import defaultPostImage from "@/public/defaultPostImage.jpg"
+import {IconTrash} from "@tabler/icons-react";
+import {ReportView} from "@/components/ReportView";
+import LikeButton from "@/components/LikeButton";
+import LinkJS from "next/link";
+import DefaultPost from "@/components/DefaultPost";
 
 interface Props {
   params: {
@@ -25,12 +34,12 @@ export async function getData({
   searchParams,
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
-}) {
-  // console.log(searchParams['sortType']);
+}): Promise<Post[]> {
+
   const url = new URLSearchParams(searchParams);
-  // console.log(url);
   const res = await fetch(`${Backend_URL}/blog?${url}`, {
     cache: 'no-store',
+    next: { tags: ['deletePost', 'createPost', 'createComment', 'changePost', 'removeComment'] },
   });
 
   if (!res.ok) {
@@ -59,25 +68,15 @@ export default async function CurrentCategory({
   const postList = posts.map((post) => (
     <BlogCard
       key={post.id}
-      id={post.id}
-      avatarImg=""
-      title={post.title}
-      content={post.content}
-      category={post.categories}
-      date={post.createdAt}
-      user={post.user.name + ' ' + post.user.surname}
-      postImage={post.image}
-      like={post.like}
-      views={post.views}
+      post={post}
     />
   ));
-  console.log(postList);
 
   return (
-    <>
-      <div className="flex">
-        {postList.length == 0 ? <BlogCard /> : postList}
+
+      <div className="w-full">
+        {postList.length > 0 ? postList : <DefaultPost/>}
       </div>
-    </>
+
   );
 }

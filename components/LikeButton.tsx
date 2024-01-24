@@ -49,11 +49,11 @@ export default function LikeButton({
   // console.log(session);
 
   return (
-    <div className="flex items-center space-x-2">
+
       <Button className="text-red-500" onClick={handleIncrementLike}>
         <IconHeartFilled className="w-4 h-4" />
         {likes} Like
       </Button>
-    </div>
+
   );
 }

@@ -12,6 +12,7 @@ import { Logo } from '@/components/icons';
 
 import { usePathname } from 'next/navigation';
 import { SidebarContext } from '@/app/sidebar/SidebarContext';
+import { Tooltip } from '@nextui-org/react';
 
 const sidebarItems = [
   {
@@ -31,8 +32,8 @@ const Sidebar = () => {
   const { isCollapsed, toggleSidebarcollapse } = useContext(SidebarContext);
 
   return (
-    <div className="sidebar__wrapper mr-7 max-sm:hidden">
-      <button className="btn" onClick={toggleSidebarcollapse}>
+    <div className="sidebar__wrapper mr-7 max-sm:hidden" onClick={toggleSidebarcollapse}>
+      <button className="btn">
         {isCollapsed ? <MdKeyboardArrowRight /> : <MdKeyboardArrowLeft />}
       </button>
       <aside className="sidebar" data-collapse={isCollapsed}>
@@ -41,8 +42,6 @@ const Sidebar = () => {
             width={80}
             height={80}
             className="sidebar__logo"
-            src="/logo.jpg"
-            alt="logo"
           />
           <p className="sidebar__logo-name">BEST-WEB-DESIGN</p>
         </div>
@@ -50,6 +49,7 @@ const Sidebar = () => {
           {sidebarItems.map(({ name, href, icon: Icon }) => {
             return (
               <li className="sidebar__item" key={name}>
+                <Tooltip isDisabled={!isCollapsed} content={name}  placement="right">
                 <Link
                   className={`sidebar__link ${
                     pathname === href ? 'sidebar__link--active' : ''
@@ -61,6 +61,7 @@ const Sidebar = () => {
                   </span>
                   <span className="sidebar__name">{name}</span>
                 </Link>
+                </Tooltip>
               </li>
             );
           })}

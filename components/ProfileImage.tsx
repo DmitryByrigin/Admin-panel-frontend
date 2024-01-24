@@ -5,8 +5,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
+import {IconDownload} from '@tabler/icons-react'
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { uploadImage } from '@/lib/actions';
 
-export default function ProfileImage(id: string) {
+export default function ProfileImage() {
   const { data: session } = useSession();
 
   const {
@@ -18,75 +21,76 @@ export default function ProfileImage(id: string) {
     setValue,
     formState: { errors, isValid },
   } = useForm({
-    resolver: zodResolver(schemaPost),
+    // resolver: zodResolver(schemaPost),
     mode: 'onChange',
   });
-  console.log(watch('file'));
+  // console.log(watch('file'));
 
   const onSubmit = async (data) => {
+    console.log("data");
     const formData = new FormData();
 
     if (data.file) {
       formData.append('image', data.file[0]);
     }
-    console.log('wefwef');
 
-    try {
-      const res = await fetch(Backend_URL + `/user/${id}`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${session?.backendTokens.accessToken}`,
-        },
-      });
-
-      if (res.ok) {
-        console.log('Blog creation successful');
-      } else {
-        console.error('Blog creation failed');
-      }
-    } catch (error) {
-      console.error('Error during submission:', error);
-    }
+    await uploadImage(formData, session!);
   };
 
+
   return (
-    <section className="flex ">
-      <article className="w-full my-3">
+    <section className="flex">
+      <article className="my-3 w-full">
         <form onSubmit={handleSubmit(onSubmit)}>
+
+
+
+
+          <div className="flex items-center justify-center w-full mb-3">
+            <label htmlFor="dropzone-file"
+                   className="flex flex-col items-center justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  <IconDownload size={60}/>
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or
+                  drag and drop</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX.SIZE 3mb)</p>
+              </div>
+              <input
+                  {...register('file')}
+                  id="dropzone-file"
+                  accept="image/*"
+                  type="file"
+                  name="file"
+                  className="hidden"
+              />
+            </label>
+          </div>
+
+
           <Button
-            type="submit"
-            htmlFor="fileinput"
-            className={`relative py-3 px-4 text-sm leading-5 rounded-xl text-default-600 border-0 transition-all duration-200 overflow-hidden cursor-pointer ${
-              errors.file
-                ? 'text-red-500 bg-red-950'
-                : watch('file')?.length
-                ? 'text-green-500 bg-green-950'
-                : 'text-default-600 bg-default-100'
-            }`}
+              type="submit"
+              className={`relative py-3 px-4 text-sm leading-5 rounded-xl text-default-600 border-0 transition-all duration-200 overflow-hidden cursor-pointer ${
+                  errors.file
+                      ? 'text-red-500 bg-red-950'
+                      : watch('file')?.length
+                          ? 'text-green-500 bg-green-950'
+                          : ''
+              }`}
           >
-            <input
-              {...register('file', { required: 'File is required' })}
-              id="fileinput"
-              accept="image/*"
-              type="file"
-              name="file"
-              className="absolute left-0 top-0 w-full h-full opacity-0 cursor-pointer"
-            />
             Upload profile image
           </Button>
+          <strong
+              className={`mx-2 ${errors.file ? 'text-danger' : 'text-success'}`}
+          >
+            {errors.file
+                ? errors.file.message
+                : watch('file')?.length
+                    ? 'Success'
+                    : ''}
+          </strong>
         </form>
 
-        <strong
-          className={`mx-1 ${errors.file ? 'text-danger' : 'text-success'}`}
-        >
-          {errors.file
-            ? errors.file.message
-            : watch('file')?.length
-            ? 'Image uploaded'
-            : ''}
-        </strong>
       </article>
     </section>
   );
-}
+};

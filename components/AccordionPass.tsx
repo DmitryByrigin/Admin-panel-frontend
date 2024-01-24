@@ -1,10 +1,11 @@
 'use client';
-import { Accordion, AccordionItem, Button, Input } from '@nextui-org/react';
+import { Accordion, AccordionItem, Button, Input, Textarea } from '@nextui-org/react';
 import React from 'react';
-import { IconAlertCircle, IconKey } from '@tabler/icons-react';
+import { IconAlertCircle, IconKey, IconTextPlus } from '@tabler/icons-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Backend_URL } from '@/lib/Contants';
 import { useSession } from 'next-auth/react';
+import ProfileImage from '@/components/ProfileImage';
 
 type ChangePass = {
   currentPass: string;
@@ -153,6 +154,22 @@ export default function AccordionPass() {
         variant="shadow"
         itemClasses={itemClasses}
       >
+
+          <AccordionItem
+              key="3"
+              aria-label="Pending tasks"
+              classNames={{ subtitle: 'text-default-600' }}
+              startContent={<IconTextPlus/>}
+              subtitle="Tell about yourself"
+              title="About"
+          >
+              <Textarea
+                  label="Description"
+                  placeholder="Enter your description"
+                  className="max-w-xs mb-3"
+              />
+              <Button>Save</Button>
+          </AccordionItem>
         <AccordionItem
           key="1"
           aria-label="Apps Permissions"
@@ -167,9 +184,12 @@ export default function AccordionPass() {
           aria-label="Pending tasks"
           classNames={{ subtitle: 'text-warning' }}
           startContent={<IconAlertCircle className="text-warning" />}
-          subtitle="Complete your profile"
-          title="Pending tasks"
-        ></AccordionItem>
+          subtitle="Change profile image"
+          title="Upload new image"
+        >
+          <ProfileImage />
+        </AccordionItem>
+
       </Accordion>
     </div>
   );

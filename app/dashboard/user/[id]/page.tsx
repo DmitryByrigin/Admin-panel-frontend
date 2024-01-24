@@ -1,13 +1,13 @@
 import { auth } from '@/auth';
 import { Backend_URL } from '@/lib/Contants';
 import { IncomingMessage } from 'http';
+import defaultIconUser from "@/public/user-circle.svg"
 
 import React from 'react';
 import { Card, CardBody, Image } from '@nextui-org/react';
-// import { IconAlertCircle, IconKey } from '@tabler/icons';
-// import { NextIcon } from './NextIcon';
 import AccordionPass from '../../../../components/AccordionPass';
 import ProfileImage from '@/components/ProfileImage';
+import { Session } from 'next-auth';
 
 type Props = {
   req: (Partial<IncomingMessage> & { body?: any }) | undefined;
@@ -16,10 +16,9 @@ type Props = {
   };
 };
 
-const ProfilePage = async ({ params: { id } }: Props) => {
-  const session = await auth();
-
+export async function getUser(id: string, session: Session | null) {
   const response = await fetch(Backend_URL + `/user/${id}`, {
+    next: { tags: ['userData'] },
     method: 'GET',
     headers: {
       authorization: `Bearer ${
@@ -32,6 +31,15 @@ const ProfilePage = async ({ params: { id } }: Props) => {
   });
 
   const user = await response.json();
+  return user;
+}
+
+const ProfilePage = async ({ params: { id } }: Props) => {
+  const session = await auth();
+
+  const user = await getUser(id, session);
+
+
   // console.log(user);
 
   // if (session?.user.role !== 'ADMIN') {
@@ -54,7 +62,7 @@ const ProfilePage = async ({ params: { id } }: Props) => {
                 alt="Album cover"
                 className="object-cove"
                 height={200}
-                src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                src={user.profileImage ? `${Backend_URL}/image/profile/${user.profileImage}` : defaultIconUser.src}
                 width="100%"
               />
             </div>
@@ -63,20 +71,15 @@ const ProfilePage = async ({ params: { id } }: Props) => {
               <div className="flex justify-between items-start">
                 <div className="flex flex-col gap-0">
                   <h1 className="text-large font-medium mt-2">
-                    {session.user.name} {session.user.surname}
+                    {session?.user.name} {session?.user.surname} ({session?.user.role})
                   </h1>
-
-                  <h3 className="font-semibold text-foreground/90">
-                    {session.user.role}
-                  </h3>
-                  <p className="text-small text-foreground/80">About</p>
                 </div>
               </div>{' '}
-              <div>
+              <div className="mt-3">
                 {' '}
                 <AccordionPass />
               </div>
-              <ProfileImage id={id} />
+
             </div>
           </div>
         </CardBody>

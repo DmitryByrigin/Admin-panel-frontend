@@ -14,7 +14,7 @@ const categorySchema = z.object({
   value: z.string(),
 });
 
-const fileValidator = (value) => {
+const fileValidator = (value: File) => {
   if (!value || !(value instanceof File)) {
     return 'File is required';
   }
@@ -111,19 +111,20 @@ export const schemaLogin = z.object({
 export const schemaPost = z.object({
   file: z
     .any()
+    .refine((file) => file?.length == 1, "Image is required")
     .refine(
-      (file) => file[0]?.size <= MAX_FILE_SIZE,
-      `Максимальный размер изображения - 3MB.`,
+      (file) => file?.[0]?.size <= MAX_FILE_SIZE,
+      `Max size - 3MB.`,
     )
     .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file[0]?.type),
-      `Поддерживаются только форматы .jpg, .jpeg, .png и .gif.`,
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.[0]?.type),
+      `Only these formats are supported .jpg, .jpeg, .png и .gif.`,
     ),
   title: z.string().min(1, 'Title is required.'),
 
   content: z.string().min(50, 'Content must be at least 50 characters..'),
 
-  categories: z.string().array().min(1, 'Category is required.'),
+  categories: z.string().min(1).array().min(1, 'Category is required.'),
 });
 
 export type PostSchemaType = z.infer<typeof schemaPost>;
