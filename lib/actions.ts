@@ -1,29 +1,22 @@
 'use server';
 
-import { signIn, signOut } from '@/auth';
+import { signIn, signOut } from '@/auth/auth';
 import { redirect } from 'next/navigation';
 import { Backend_URL } from '@/lib/Contants';
 import { schema, schemaLogin } from '@/lib/schema';
 import { revalidateTag } from 'next/cache';
-import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
 import { Post } from '@/lib/types';
 
-
 export async function register(formData: FormData) {
-  console.log('Register');
+  // console.log('Register');
   const data = Object.fromEntries(formData);
   try {
     schema.parse(data);
   } catch (error) {
-    console.error('Ошибка валидации:', error);
+    // console.error('Ошибка валидации:', error);
     return data;
   }
-
-  // if (data.name || !data.email || !data.password) {
-  //     console.log('Поля не могут быть пустыми');
-  //     return;
-  // }
 
   const res = await fetch(Backend_URL + '/auth/register', {
     method: 'POST',
@@ -43,6 +36,7 @@ export async function register(formData: FormData) {
   }
   await signIn('credentials', data, { callbackUrl: `/dashboard/user` });
 }
+
 export async function login(formData: FormData) {
   // console.log(formData);
   const data = Object.fromEntries(formData);
@@ -50,8 +44,8 @@ export async function login(formData: FormData) {
   try {
     schemaLogin.parse(data);
   } catch (error) {
-    console.error('Ошибка валидации:', error);
-    return { error: 'Ошибка валидации: ' + error };
+    // console.error('Ошибка валидации:', error);
+    // return { error: 'Ошибка валидации: ' + error };
   }
 
   const res = await fetch(Backend_URL + '/auth/login', {
@@ -70,7 +64,7 @@ export async function login(formData: FormData) {
   }
 
   if (!res.ok) {
-    console.error('Ошибка при выполнении fetch:', res.status, res.statusText);
+    // console.error('Ошибка при выполнении fetch:', res.status, res.statusText);
     // Handle other errors if needed
     return { error: 'An error occurred during login.' };
   }
@@ -78,17 +72,15 @@ export async function login(formData: FormData) {
   await signIn('credentials', data, {
     callbackUrl: '/dashboard/blog/categories',
   });
-
-
-
 }
 
 export async function logout() {
   await signOut();
   redirect('/');
 }
+
 export async function loginGoogle() {
-  console.log('Login google');
+  // console.log('Login google');
   const url = await signIn(
     'google',
     { redirect: false },
@@ -99,9 +91,7 @@ export async function loginGoogle() {
   redirect(url.replace('signin', 'api/auth/signin'));
 }
 
-export async function uploadImage(data: FormData, session: Session)  {
-
-
+export async function uploadImage(data: FormData, session: Session) {
   try {
     const res = await fetch(Backend_URL + `/user/upload/`, {
       method: 'POST',
@@ -112,24 +102,21 @@ export async function uploadImage(data: FormData, session: Session)  {
     });
 
     if (res.ok) {
-      console.log('Image upload successful');
-      revalidateTag('userData');
+      // console.log('Image upload successful');
+      revalidateTag('updateBlogData');
     } else {
       console.error(res);
     }
   } catch (error) {
     console.error('Error during submission:', error);
   }
-
 }
 
 export async function RemovePost(id: number, session: Session) {
-  console.log(id);
+  // console.log(id);
   try {
     const res = await fetch(Backend_URL + `/blog/remove/${id}`, {
-
       method: 'DELETE',
-      // body: JSON.stringify({ id }),
       headers: {
         Authorization: `Bearer ${session.backendTokens.accessToken}`,
         'Content-Type': 'application/json',
@@ -137,9 +124,8 @@ export async function RemovePost(id: number, session: Session) {
     });
 
     if (res.ok) {
-      console.log('Blog deleting successful');
-      // setFileUploaded(true);
-      revalidateTag('deletePost');
+      // console.log('Blog deleting successful');
+      revalidateTag('updateBlogData');
     } else {
       console.error('Blog creation failed');
     }
@@ -148,9 +134,11 @@ export async function RemovePost(id: number, session: Session) {
   }
 }
 
-export const createComment = async (id: number, session: Session, commentText: string) => {
-  // console.log(id);
-  // console.log(session);
+export const createComment = async (
+  id: number,
+  session: Session,
+  commentText: string,
+) => {
   try {
     const res = await fetch(Backend_URL + `/blog/${id}/comments`, {
       method: 'POST',
@@ -161,22 +149,17 @@ export const createComment = async (id: number, session: Session, commentText: s
       body: JSON.stringify({ text: commentText }), // Send the comment text in the body
     });
 
-
-  if (res.ok) {
-    console.log('Comment creation successful');
-    // setFileUploaded(true);
-    revalidateTag('createComment');
-  } else {
-    console.error('Comment creation failed');
+    if (res.ok) {
+      // console.log('Comment creation successful');
+      // setFileUploaded(true);
+      revalidateTag('updateBlogData');
+    } else {
+      console.error('Comment creation failed');
+    }
+  } catch (error) {
+    console.error('Error during submission:', error);
   }
-} catch (error) {
-  console.error('Error during submission:', error);
-}
-
-  // You can handle the response here, e.g., check if it was successful
 };
-
-
 
 export async function postBlog(formData: FormData, session: Session) {
   try {
@@ -189,8 +172,8 @@ export async function postBlog(formData: FormData, session: Session) {
     });
 
     if (res.ok) {
-      revalidateTag('createPost');
-      console.log('Blog creation successful');
+      revalidateTag('updateBlogData');
+      // console.log('Blog creation successful');
       return 'Success';
     } else {
       console.error('Blog creation failed');
@@ -202,8 +185,11 @@ export async function postBlog(formData: FormData, session: Session) {
   }
 }
 
-
-export const updateBlogPost = async (formData: FormData, post: Post, session: Session) => {
+export const updateBlogPost = async (
+  formData: FormData,
+  post: Post,
+  session: Session,
+) => {
   try {
     const res = await fetch(Backend_URL + `/blog/${post.id}`, {
       method: 'PATCH',
@@ -215,8 +201,8 @@ export const updateBlogPost = async (formData: FormData, post: Post, session: Se
     });
 
     if (res.ok) {
-      revalidateTag('changePost');
-      console.log('Blog update successful');
+      revalidateTag('updateBlogData');
+      // console.log('Blog update successful');
     } else {
       console.error('Blog update failed');
     }
@@ -225,57 +211,32 @@ export const updateBlogPost = async (formData: FormData, post: Post, session: Se
   }
 };
 
-
-export const RemoveComment = async (commentId: number ,session: Session, postId: number) => {
-    try {
-      const res = await fetch(Backend_URL + `/blog/${postId}/comments/${commentId}`, {
+export const RemoveComment = async (
+  commentId: number,
+  session: Session,
+  postId: number,
+) => {
+  try {
+    const res = await fetch(
+      Backend_URL + `/blog/${postId}/comments/${commentId}`,
+      {
         method: 'DELETE',
         cache: 'no-store',
         headers: {
           Authorization: `Bearer ${session.backendTokens.accessToken}`,
           'Content-Type': 'application/json',
         },
-      });
+      },
+    );
 
-      if(res.ok) {
-        revalidateTag('removeComment');
-      }
-
-      if (!res.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      // const data = res.json();
-      // console.log(data);
-      // return data;
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      // return [];
+    if (res.ok) {
+      revalidateTag('updateBlogData');
     }
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch data');
+    }
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+  }
 };
-
-
-
-// export async function incrementLike(session, id) {
-//   try {
-//     const response = await fetch(Backend_URL + `/blog/${id}/like`, {
-//       method: 'POST',
-//       headers: {
-//         Authorization: `Bearer ${session.backendTokens.accessToken}`,
-//         'Content-Type': 'application/json',
-//       },
-//     });
-//
-//     if (response.ok) {
-//       const data = await response.json();
-//       console.log(data);
-//       return data?.countLikes || 0;
-//     } else {
-//       // Handle non-ok response if needed
-//       console.error('Non-ok response:', response.status, response.statusText);
-//       throw new Error('Failed to increment like.');
-//     }
-//   } catch (error) {
-//     console.error('Error handling like:', error);
-//     throw error; // Rethrow the error to be handled by the calling code
-//   }
-// }

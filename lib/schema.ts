@@ -1,4 +1,4 @@
-import { TypeOf, z } from 'zod';
+import { z } from 'zod';
 
 const MAX_FILE_SIZE = 3000000; // Максимальный размер файла в байтах (3MB)
 const ACCEPTED_IMAGE_TYPES = [
@@ -101,21 +101,13 @@ export const schemaLogin = z.object({
       (password) => /[_+!]/.test(password),
       'Password must be at least 1 special character (_+!).',
     ),
-
-  // message: z.string()
-  //     .nonempty('Message is required.')
-  //     .min(6, 'Message must be at least 6 characters.')
-  //     .max(500, 'Message must be less than 500 characters.'),
 });
 
 export const schemaPost = z.object({
   file: z
     .any()
-    .refine((file) => file?.length == 1, "Image is required")
-    .refine(
-      (file) => file?.[0]?.size <= MAX_FILE_SIZE,
-      `Max size - 3MB.`,
-    )
+    .refine((file) => file?.length == 1, 'Image is required')
+    .refine((file) => file?.[0]?.size <= MAX_FILE_SIZE, `Max size - 3MB.`)
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.[0]?.type),
       `Only these formats are supported .jpg, .jpeg, .png и .gif.`,

@@ -1,12 +1,11 @@
-import { auth } from '@/auth';
+import { auth } from '@/auth/auth';
 import { Backend_URL } from '@/lib/Contants';
 import { IncomingMessage } from 'http';
-import defaultIconUser from "@/public/user-circle.svg"
+import defaultIconUser from '@/public/img/user-circle.svg';
 
 import React from 'react';
 import { Card, CardBody, Image } from '@nextui-org/react';
-import AccordionPass from '../../../../components/AccordionPass';
-import ProfileImage from '@/components/ProfileImage';
+import AccordionPass from '@/components/userProfile/AccordionPass';
 import { Session } from 'next-auth';
 
 type Props = {
@@ -39,7 +38,6 @@ const ProfilePage = async ({ params: { id } }: Props) => {
 
   const user = await getUser(id, session);
 
-
   // console.log(user);
 
   // if (session?.user.role !== 'ADMIN') {
@@ -62,24 +60,28 @@ const ProfilePage = async ({ params: { id } }: Props) => {
                 alt="Album cover"
                 className="object-cove"
                 height={200}
-                src={user.profileImage ? `${Backend_URL}/image/profile/${user.profileImage}` : defaultIconUser.src}
+                src={
+                  user.profileImage
+                    ? `${Backend_URL}/image/profile/${user.profileImage}`
+                    : defaultIconUser.src
+                }
                 width="100%"
               />
             </div>
 
             <div className="flex flex-col col-span-6 md:col-span-8">
               <div className="flex justify-between items-start">
-                <div className="flex flex-col gap-0">
-                  <h1 className="text-large font-medium mt-2">
-                    {session?.user.name} {session?.user.surname} ({session?.user.role})
+                <div className="flex flex-col gap-0 w-full">
+                  <h1 className="flex text-large font-medium mt-2 justify-center lg:justify-start">
+                    {session?.user.name} {session?.user.surname} (
+                    {session?.user.role})
                   </h1>
                 </div>
               </div>{' '}
-              <div className="mt-3">
+              <div className="mt-3 sm: w-full">
                 {' '}
                 <AccordionPass />
               </div>
-
             </div>
           </div>
         </CardBody>

@@ -1,24 +1,22 @@
 'use client';
 import { Input } from '@nextui-org/input';
-import Image from 'next/image';
-import main from '#/public/main.jpg';
-import { ThemeSwitch } from '@/components/theme-switch';
+import { ThemeSwitch } from '@/components/blogComponents/theme-switch';
 import style from '@/app/authorization/login/page.module.css';
-import { IconAt, IconEyeClosed, IconEyeFilled, IconUserCircle } from '@tabler/icons-react';
+import {
+  IconAt,
+  IconEyeClosed,
+  IconEyeFilled,
+  IconUserCircle,
+  IconUserSquareRounded,
+} from '@tabler/icons-react';
 import NextLink from 'next/link';
-import GoogleButton from '@/components/GoogleButton';
-import PasswordInput from '@/components/loginforms/PasswordInput';
 import { register as actionRegister } from '@/lib/actions';
-import { IconUserSquareRounded } from '@tabler/icons-react';
-import ChangeImage from '@/components/ChangeImage';
-import { useFormState } from 'react-dom';
-import { z } from 'zod';
-import { log } from 'util';
+import ChangeImage from '@/components/loginforms/ChangeImage';
 import React, { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { schema } from '@/lib/schema';
-import { SubmitButtonRegister } from '../shared/SubmitButtonRegister';
+import GoogleButton, { SubmitButton } from '@/components/buttons';
 
 export default function RegisterForm() {
   const {
@@ -35,7 +33,6 @@ export default function RegisterForm() {
 
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  // console.log(value);
   const [isLoading, setIsLoading] = useState(null);
 
   const onSubmit = async (formData: FormData) => {
@@ -44,7 +41,7 @@ export default function RegisterForm() {
     setIsLoading(true);
     const dataForm = await actionRegister(formData);
     setIsLoading(false);
-    console.log(dataForm?.error);
+    // console.log(dataForm?.error);
     if (dataForm?.error) {
       setError('form', {
         type: 'manual',
@@ -61,7 +58,9 @@ export default function RegisterForm() {
           <ChangeImage />
         </article>
 
-        <article className={`w-full md:w-1/2 py-5 px-5 md:px-10 ${style.verticalCenter}`}>
+        <article
+          className={`w-full md:w-1/2 py-5 px-5 md:px-10 ${style.verticalCenter}`}
+        >
           <div className="flex justify-end">
             <ThemeSwitch />
           </div>
@@ -84,7 +83,13 @@ export default function RegisterForm() {
                     placeholder="johnSmit@mail.com"
                     labelPlacement="outside"
                     // isInvalid={isInvalid}
-                    color={!watch('email') ? 'default' : errors.email ? 'danger' : 'success'}
+                    color={
+                      !watch('email')
+                        ? 'default'
+                        : errors.email
+                          ? 'danger'
+                          : 'success'
+                    }
                     errorMessage={
                       <strong>
                         {errors.email
@@ -108,7 +113,13 @@ export default function RegisterForm() {
                     label="Surname"
                     placeholder="Smith"
                     labelPlacement="outside"
-                    color={!watch('surname') ? 'default' : errors.surname ? 'danger' : 'success'}
+                    color={
+                      !watch('surname')
+                        ? 'default'
+                        : errors.surname
+                          ? 'danger'
+                          : 'success'
+                    }
                     errorMessage={
                       <strong>
                         {errors.surname
@@ -122,7 +133,6 @@ export default function RegisterForm() {
                       <IconUserCircle className="text-2xl text-default-400 pointer-events-none" />
                     }
                   />
-                  {/*<p>{errors.surname}</p>*/}
                 </article>
               </div>
 
@@ -136,7 +146,13 @@ export default function RegisterForm() {
                       label="Name"
                       placeholder="John"
                       labelPlacement="outside"
-                      color={!watch('name') ? 'default' : errors.name ? 'danger' : 'success'}
+                      color={
+                        !watch('name')
+                          ? 'default'
+                          : errors.name
+                            ? 'danger'
+                            : 'success'
+                      }
                       errorMessage={
                         <strong>
                           {errors.name
@@ -148,11 +164,7 @@ export default function RegisterForm() {
                       endContent={
                         <IconUserSquareRounded className="text-2xl text-default-400 pointer-events-none" />
                       }
-                      // onChange={(e) => validate('name', e.target.value)}
-                      // onBlur={() => setErrors({ ...errors, name: undefined })}
-                      // onFocus={(e) => validate('name', e.target.value)}
                     />
-                    {/*<p>{errors.name}</p>*/}
                   </div>
                 </article>
               </section>
@@ -160,18 +172,20 @@ export default function RegisterForm() {
               <section className="flex mx-6">
                 <article className="w-full px-3 mb-3">
                   <div className="flex">
-                    {/*<PasswordInput />*/}
                     <Input
                       {...register('password')}
                       value={watch('password')}
-                      type={isVisible ? "text" : "password"}
+                      type={isVisible ? 'text' : 'password'}
                       label="Password"
                       name="password"
-                      // variant="bordered"
                       placeholder="Enter your password"
                       labelPlacement="outside"
                       color={
-                        !watch('password') ? 'default' : errors.password ? 'danger' : 'success'
+                        !watch('password')
+                          ? 'default'
+                          : errors.password
+                            ? 'danger'
+                            : 'success'
                       }
                       errorMessage={
                         <strong>
@@ -185,7 +199,8 @@ export default function RegisterForm() {
                         <button
                           className="focus:outline-none"
                           type="button"
-                          onClick={toggleVisibility}>
+                          onClick={toggleVisibility}
+                        >
                           {isVisible ? (
                             <IconEyeFilled className="text-2xl text-default-400 pointer-events-none" />
                           ) : (
@@ -201,19 +216,24 @@ export default function RegisterForm() {
               <article className="mb-3">
                 <p className="mb-2 mx-8">
                   Already Registered?{' '}
-                  <NextLink href="/authorization/login" className="text-blue-600">
+                  <NextLink
+                    href="/authorization/login"
+                    className="text-blue-600"
+                  >
                     Login
                   </NextLink>
                 </p>
                 <strong className=" mx-8 text-danger-400 text-sm">
-                  {errors.form ? errors.form.message : watch('form') && errors.form?.message}
+                  {errors.form
+                    ? errors.form.message
+                    : watch('form') && errors.form?.message}
                 </strong>
               </article>
 
               <section className="flex -mx-2">
                 <article className="w-full px-3 mb-2">
                   <div className="flex items-center justify-center">
-                    <SubmitButtonRegister isLoading={isLoading} />
+                    <SubmitButton isLoading={isLoading} buttonText="Register" />
                   </div>
 
                   <div className="flex items-center justify-center">

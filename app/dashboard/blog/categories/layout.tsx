@@ -1,6 +1,6 @@
 import AsideItems from '@/components/aside/AsideItems';
 import { Card } from '@nextui-org/react';
-import SortedButtons from '@/components/SortedButtons';
+import SortedButtons from '@/components/blogComponents/SortedButtons';
 
 export default function BlogLayout({
   children,

@@ -3,14 +3,14 @@ import { Avatar, Image } from '@nextui-org/react';
 import { Post } from '@/lib/types';
 import { Backend_URL } from '@/lib/Contants';
 import { format } from 'date-fns';
-import { ReportView } from '@/components/ReportView';
-import { IconBackspace, IconEdit} from '@tabler/icons-react';
+import { ReportView } from '@/components/blogComponents/ReportView';
+import { IconBackspace } from '@tabler/icons-react';
 import Link from 'next/link';
-import Comments from '@/components/Comments';
-import NewCommentFill from '@/components/NewCommentFill';
-import LikeButton from '@/components/LikeButton';
-import EditPost from '@/components/EditPost';
-import { auth } from '@/auth';
+import Comments from '@/components/blogComponents/Comments';
+import NewCommentFill from '@/components/blogComponents/NewCommentFill';
+import { LikeButton } from '@/components/buttons';
+import EditPost from '@/components/blogComponents/EditPost';
+import { auth } from '@/auth/auth';
 
 interface Props {
   params: {
@@ -19,12 +19,10 @@ interface Props {
 }
 
 export async function getPost(id: number): Promise<Post> {
-
   const res = await fetch(Backend_URL + `/blog/${id}`, {
     cache: 'no-store',
     next: { tags: ['createComment'] },
   });
-
 
   if (!res.ok) {
     throw new Error('Failed to fetch data');
@@ -52,7 +50,7 @@ export default async function PostPage({ params }: Props) {
   // const comments = await getComments(params.id);
   // console.log(post.user);
   const formattedDate = format(new Date(post.createdAt), 'yyyy-MM-dd/HH:mm:ss');
-  const userImage = `${Backend_URL}/image/profile/${post.user.profileImage}`
+  const userImage = `${Backend_URL}/image/profile/${post.user.profileImage}`;
 
   const commentsList = post.comments.map((comment) => (
     <Comments
@@ -64,7 +62,7 @@ export default async function PostPage({ params }: Props) {
       postId={post.id}
     />
   ));
-  console.log(post.user);
+  // console.log(post.user);
 
   return (
     <div className="px-4 py-6 md:px-6 lg:py-16 md:py-12 ">
@@ -77,7 +75,7 @@ export default async function PostPage({ params }: Props) {
               </h1>
             </div>
             <div className="flex items-center space-x-2">
-              {session?.user.role === 'ADMIN' && <EditPost post={post}/>}
+              {session?.user.role === 'ADMIN' && <EditPost post={post} />}
               <Button href={'/dashboard/blog/categories'} as={Link}>
                 <IconBackspace className="w-4 h-4" />
                 Back
@@ -97,11 +95,16 @@ export default async function PostPage({ params }: Props) {
             src={`${Backend_URL}/image/blog/${post.image}`}
           />
         </figure>
-        <p className='text-xl'>{post.content}</p>
+        <p className="text-xl">{post.content}</p>
       </article>
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-2">
-          <Avatar showFallback alt="User Avatar" className="w-8 h-8" src={userImage} />
+          <Avatar
+            showFallback
+            alt="User Avatar"
+            className="w-8 h-8"
+            src={userImage}
+          />
           <span className="text-sm text-gray-600">
             Posted by {post.user ? post.user.name : 'Unknown'}
           </span>
@@ -113,9 +116,7 @@ export default async function PostPage({ params }: Props) {
       </div>
       <section className="mt-8">
         <h2 className="font-semibold text-2xl mb-4">Comments</h2>
-        <div className="grid gap-4">
-          {commentsList}
-        </div>
+        <div className="grid gap-4">{commentsList}</div>
 
         <NewCommentFill id={params.id} />
       </section>

@@ -1,9 +1,6 @@
-import BlogCard from '@/app/dashboard/blogComponents/blogCard';
+import BlogCard from '@/components/blogComponents/blogCard';
 import { getData } from '@/app/dashboard/blog/categories/[category]/page';
-import {Avatar, Card, CardBody, CardHeader, Image} from "@nextui-org/react";
-import defaultIconUser from "@/public/user-circle.svg";
-import defaultPostImage from "@/public/defaultPostImage.jpg";
-import DefaultPost from "@/components/DefaultPost";
+import DefaultPost from '@/components/blogComponents/DefaultPost';
 
 export default async function AllPosts({
   searchParams,
@@ -12,16 +9,11 @@ export default async function AllPosts({
 }) {
   const posts = await getData({ searchParams });
 
-  const postList = posts.map((post) => (
-    <BlogCard
-      key={post.id}
-      post={post}
-    />
-  ));
+  const postList = posts.map((post) => <BlogCard key={post.id} post={post} />);
 
   return (
     <div className="w-full">
-      {postList.length > 0 ? postList : <DefaultPost/>}
+      {postList.length > 0 ? postList : <DefaultPost />}
     </div>
   );
 }
