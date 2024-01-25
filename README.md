@@ -8,7 +8,6 @@ This is a template of blog for creating applications using Next.js 14 (app direc
 - [NextUI v2](https://nextui.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
 - [NextAuth](https://next-auth.js.org/)
 
 ## Installation of project
